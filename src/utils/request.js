@@ -66,7 +66,6 @@ async function request(url, options) {
       __token__: await Storage.get(sk_user_token),
     };
   }
-  // let new_url;
   if (
     newOptions.method === 'POST' ||
     newOptions.method === 'PUT' ||
@@ -92,7 +91,6 @@ async function request(url, options) {
       };
       newOptions.data = { ...newOptions.body };
     }
-    // new_url = url
   } else if (newOptions.method === 'GET') {
     newOptions.params = { ...newOptions.body };
     // new_url = url + '?' + setUrlEncoded(newOptions.body)
@@ -103,11 +101,11 @@ async function request(url, options) {
     .create()
     .request({
       url: UrlConfig.base_url + url,
-      // baseURL: UrlConfig.base_url,
-      timeout: 10000,
+      timeout: 30000,
       ...newOptions,
     })
     .then((res) => {
+      console.log('response', res)
       return checkStatus(res)
     })
     .catch(error => {
