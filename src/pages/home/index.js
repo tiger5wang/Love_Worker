@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import {WingBlank, SearchBar , Flex, List} from 'antd-mobile'
+import {WingBlank, SearchBar} from 'antd-mobile'
 import styles from './index.css';
 import router from 'umi/router';
 
@@ -13,8 +13,14 @@ class Home extends Component {
     }
   }
 
-  gotoWordsList = () => {
-    router.push('')
+  gotoWordsList = (Id) => {
+    console.log('888888888888')
+    router.push({
+      pathname: '/wordsList',
+      query: {
+        id: Id
+      }
+    })
   };
 
   loadData = () =>{
@@ -47,7 +53,7 @@ class Home extends Component {
                     item.data && item.data.length> 0 && item.data.map((item2, index2) => {
                       return (
                         <a href="" className={styles.link}>
-                          <button className={styles.btn} onClick={this.gotoWordsList}>{item2.name}</button>
+                          <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id)}>{item2.name}</button>
                         </a>
                       )
                     })

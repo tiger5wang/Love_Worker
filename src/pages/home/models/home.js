@@ -1,5 +1,4 @@
 import {directorList} from '../../../services/home'
-import { Toast } from 'antd-mobile/lib/index';
 
 export default {
   namespace: 'home',
