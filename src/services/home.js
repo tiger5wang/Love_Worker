@@ -9,3 +9,8 @@ export async function directorList(params) {
 export async function webHeader(params) {
   return proxyRequest.get('/users/get_web_name/', params);
 }
+
+// Search话术
+export async function searchWebdata(params) {
+  return proxyRequest.get('/users/filter_huashu/', params);
+}

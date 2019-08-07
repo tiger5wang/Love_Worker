@@ -50,7 +50,13 @@ class Home extends Component {
   };
 
     SearchValue= (value) => {
-      console.log(JSON.stringify(value))
+      router.push({
+        pathname: '/home/HuaShuList',
+        query: {
+          filterData: value,
+        },
+      });
+
     // this.setState({ value });
   };
 
@@ -62,7 +68,7 @@ class Home extends Component {
         <div className={styles.header}>
           <span className={styles.headerFont}>{this.props.header.name}</span>
         </div>
-        <SearchBar placeholder="Search" onChange={this.SearchValue}/>
+        <SearchBar placeholder="搜索话术" onChange={this.SearchValue}/>
         <WingBlank>
           {this.props.directorList.length > 0 && this.props.directorList.map((item, index) => {
             return(
