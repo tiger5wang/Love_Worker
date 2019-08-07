@@ -8,7 +8,7 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'Love_Worker',
+      title: 'L',
       dll: true,
       
       routes: {

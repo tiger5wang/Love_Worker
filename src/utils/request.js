@@ -96,7 +96,6 @@ async function request(url, options) {
     // new_url = url + '?' + setUrlEncoded(newOptions.body)
     delete newOptions.body
   }
-  console.log('request_params', newOptions)
   return axios
     .create()
     .request({
@@ -105,7 +104,6 @@ async function request(url, options) {
       ...newOptions,
     })
     .then((res) => {
-      console.log('request_response', res)
       return checkStatus(res)
     })
     .catch(error => {

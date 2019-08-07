@@ -8,14 +8,13 @@ export default {
   effects: {
     *getWordsList({ payload, callback }, { call, put }) {
       const response = yield call(getWordsLists, payload);
-      console.log('list', response);
       if(response.code === 200) {
         yield put({
           type: 'wordsLists',
           payload: response.data
         })
       } else {
-        alert(response.description)
+
       }
     }
   },

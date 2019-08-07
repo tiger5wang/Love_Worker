@@ -9,16 +9,33 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-      directorList: []
+      directorList: [],
     }
   }
 
-  gotoWordsList = (Id) => {
-    console.log('888888888888')
+  componentDidMount() {
+    this.getWebHeader()
+    this.loadData();
+
+  }
+
+
+
+  getWebHeader=()=>{
+    const{dispatch} = this.props;
+    dispatch({
+      type:'header/getWebHeader',
+      payload: {}
+    })
+  }
+
+
+  gotoWordsList = (Id, Name) => {
     router.push({
       pathname: '/wordsList',
       query: {
-        id: Id
+        id: Id,
+        name: Name
       }
     })
   };
@@ -32,17 +49,20 @@ class Home extends Component {
     })
   };
 
-  componentDidMount = () => {
-    this.loadData()
+    SearchValue= (value) => {
+      console.log(JSON.stringify(value))
+    // this.setState({ value });
   };
 
+
   render() {
+
     return(
       <div>
         <div className={styles.header}>
-          <span className={styles.headerFont}>页头</span>
+          <span className={styles.headerFont}>{this.props.header.name}</span>
         </div>
-        <SearchBar placeholder="Search"  />
+        <SearchBar placeholder="Search" onChange={this.SearchValue}/>
         <WingBlank>
           {this.props.directorList.length > 0 && this.props.directorList.map((item, index) => {
             return(
@@ -53,7 +73,7 @@ class Home extends Component {
                     item.data && item.data.length> 0 && item.data.map((item2, index2) => {
                       return (
                         <a href="" className={styles.link}>
-                          <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id)}>{item2.name}</button>
+                          <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id, item2.name)}>{item2.name}</button>
                         </a>
                       )
                     })
@@ -71,6 +91,6 @@ class Home extends Component {
 }
 
 
-export default connect(({home}) => ({
-  directorList: home.directorList
+export default connect(({home, header}) => ({
+  directorList: home.directorList, header
 }))(Home)

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
+import {Icon, Flex, WhiteSpace} from 'antd-mobile'
 import router from 'umi/router';
 import styles from './index.css';
 
@@ -14,7 +15,7 @@ class WordsList extends Component {
     dispatch({
       type: 'wordList/getWordsList',
       payload: {
-        PID: this.id
+        PID: this.props.location.query.id
       }
     })
   };
@@ -24,21 +25,34 @@ class WordsList extends Component {
     this.loadData()
   }
 
+
+  returnPage = () => {
+    router.push({
+      pathname: '/',
+    });
+  };
+
+
+
   render() {
     const {wordsLists} = this.props;
-    console.log('wordlist', wordsLists)
+    const PlaceHolder = ({ className = '', ...restProps }) => (
+      <div className={`${className} placeholder`} {...restProps}>Block</div>
+    );
+
     return (
       <div>
         <div className={styles.header}>
-          <div className={styles.goback}>
-            <img src="../../assets/goback.png" />
-            <span className={styles.back}>返回</span>
-          </div>
-          <span className={styles.headerFont}>开场白</span>
+
+          <Flex justify="start">
+            <div className={styles.goback}>
+              <Icon onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>
+            </div>
+            <span className={styles.headerFont}>{this.props.location.query.name}</span>
+          </Flex>
         </div>
         {wordsLists && wordsLists.length > 0 && wordsLists.map((item, index) => {
           let context = item.context.split('^');
-          console.log(context)
           return(
             <div className={styles.content}>
               {context.map((data) => {
