@@ -32,6 +32,7 @@ function checkStatus(response) {
     if (response.status) {
       // console.log('--->', codeMessage[response.status])
       if (response.status >= 200 && response.status < 300) {
+        Storage.set(sk_user_token, response.token)
         response.success = true; //eslint-disable-line
         return result;
       }
