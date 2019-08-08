@@ -10,12 +10,9 @@ class HuaShuList extends Component {
     this.state = {}
   }
 
-
-
   componentDidMount() {
     this.searchDataList()
   }
-
 
   returnPage = () => {
     router.push({
@@ -40,9 +37,6 @@ class HuaShuList extends Component {
     const{data} = searchData;
 
     console.log(JSON.stringify(this.props))
-
-
-
 
     const PlaceHolder = ({ className = '', ...restProps }) => (
       <div className={`${className} placeholder`} {...restProps}>Block</div>

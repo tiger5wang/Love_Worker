@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import {WingBlank, SearchBar, TabBar, Icon} from 'antd-mobile'
+import {TabBar} from 'antd-mobile'
 import styles from './index.css';
-import router from 'umi/router';
 import SessionCategoryList from './SessionCategoryList'
 
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import {WingBlank, SearchBar, TabBar, Icon} from 'antd-mobile'
+import { WingBlank, SearchBar } from 'antd-mobile'
 import styles from './index.css';
 import router from 'umi/router';
 
