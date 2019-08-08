@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import {WingBlank, SearchBar} from 'antd-mobile'
+import {WingBlank, SearchBar, TabBar, Icon} from 'antd-mobile'
 import styles from './index.css';
 import router from 'umi/router';
+import SessionCategoryList from './SessionCategoryList'
 
 
 class Home extends Component {
@@ -10,89 +11,67 @@ class Home extends Component {
     super(props);
     this.state = {
       directorList: [],
+      selectedTab: 'words'
     }
   }
 
-  componentDidMount() {
-    this.getWebHeader()
-    this.loadData();
-
-  }
-
-
-
-  getWebHeader=()=>{
-    const{dispatch} = this.props;
-    dispatch({
-      type:'header/getWebHeader',
-      payload: {}
-    })
-  }
-
-
-  gotoWordsList = (Id, Name) => {
-    router.push({
-      pathname: '/wordsList',
-      query: {
-        id: Id,
-        name: Name
-      }
-    })
-  };
-
-  loadData = () =>{
-    const{dispatch} = this.props;
-    dispatch({
-      type: 'home/getDirectorList',
-      payload: {},
-      callback: () => {}
-    })
-  };
-
-    SearchValue= (value) => {
-      router.push({
-        pathname: '/home/HuaShuList',
-        query: {
-          filterData: value,
-        },
-      });
-
-    // this.setState({ value });
-  };
-
-
   render() {
-
     return(
-      <div>
-        <div className={styles.header}>
-          <span className={styles.headerFont}>{this.props.header.name}</span>
-        </div>
-        <SearchBar placeholder="搜索话术" onChange={this.SearchValue}/>
-        <WingBlank>
-          {this.props.directorList.length > 0 && this.props.directorList.map((item, index) => {
-            return(
-              <div className={styles.container}>
-                <span className={styles.firstDic}>{item.name}</span>
-                <div className={styles.itemContain}>
-                  {
-                    item.data && item.data.length> 0 && item.data.map((item2, index2) => {
-                      return (
-                        <a href="" className={styles.link}>
-                          <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id, item2.name)}>{item2.name}</button>
-                        </a>
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            )
-          })}
-        </WingBlank>
+      <div style={{ position: 'fixed', height: '100%', width: '100%', top: 0}}>
+        <TabBar
+          unselectedTintColor="#949494"
+          tintColor={'#ff790c'}
+          barTintColor="white"
+          hidden={this.state.hidden}
+        >
+          <TabBar.Item
+            title="情话"
+            key="wordsv"
+            icon={<div className={styles.words}/>}
+            selectedIcon={<div className={styles.words_selected}/>
+            }
+            selected={this.state.selectedTab === 'words'}
+            onPress={() => {
+              this.setState({
+                selectedTab: 'words',
+              });
+            }}
+          >
+            {<SessionCategoryList/>}
+          </TabBar.Item>
+          <TabBar.Item
+            icon={<div className={styles.middle}/>}
+            selectedIcon={<div className={styles.middle_selected}/>}
+            title="撩妹技巧"
+            key="middle"
+            selected={this.state.selectedTab === 'middle'}
+            onPress={() => {
+              this.setState({
+                selectedTab: 'middle',
+              });
+            }}
+          >
+            {<SessionCategoryList/>}
+          </TabBar.Item>
+          <TabBar.Item
+            icon={<div className={styles.icon}/>}
+            selectedIcon={<div className={styles.icon_selected}/>}
+            title="个人中心"
+            key="account"
+            selected={this.state.selectedTab === 'account'}
+            onPress={() => {
+              this.setState({
+                selectedTab: 'account',
+              });
+            }}
+          >
+            {<SessionCategoryList/>}
+          </TabBar.Item>
+
+        </TabBar>
       </div>
     )
   }
-
 
 }
 

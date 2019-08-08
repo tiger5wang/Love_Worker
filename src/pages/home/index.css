@@ -1,5 +1,5 @@
 .header {
-  background-color: indianred;
+  background-color: #ff790c;
   padding: 10px;
 }
 .headerFont {
@@ -35,5 +35,47 @@
   padding: 5px 10px;
   min-width: 30%;
   margin: 1.5%;
+}
 
+.icon_selected {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/account_selected.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+.icon {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/account.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+.words_selected {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/words_selected.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+.words {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/words.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+.middle_selected {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/middle_selected.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+.middle {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/middle.png) no-repeat center 0;
+  background-size: 20px 20px;
 }
