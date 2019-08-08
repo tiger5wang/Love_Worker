@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import { WingBlank, SearchBar } from 'antd-mobile'
+import {WingBlank, SearchBar, Toast, } from 'antd-mobile'
 import styles from './index.css';
 import router from 'umi/router';
+import { Storage } from '@/utils';
+import { sk_user_token } from '@/config/StorageKeys';
 
 
 class SessionCategoryList extends Component {
@@ -17,7 +19,7 @@ class SessionCategoryList extends Component {
   componentDidMount() {
     this.getWebHeader()
     this.loadData();
-
+    this.token = localStorage.getItem(sk_user_token)
   }
 
   getWebHeader=()=>{
@@ -29,13 +31,19 @@ class SessionCategoryList extends Component {
   }
 
   gotoWordsList = (Id, Name) => {
-    router.push({
-      pathname: '/wordsList',
-      query: {
-        id: Id,
-        name: Name
-      }
+
+    if(this.token === undefined || this.token === 'undefined' || this.token === ""){
+     Toast.offline('请您登录之后查看');
+     return
+    }else{
+      router.push({
+        pathname: '/wordsList',
+        query: {
+          id: Id,
+          name: Name,
+        },
     })
+    }
   };
 
   loadData = () =>{
@@ -72,9 +80,7 @@ class SessionCategoryList extends Component {
                   {
                     item.data && item.data.length> 0 && item.data.map((item2, index2) => {
                       return (
-                        <a href="" className={styles.link}>
                           <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id, item2.name)}>{item2.name}</button>
-                        </a>
                       )
                     })
                   }

@@ -8,7 +8,7 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'L',
+      title: '恋爱话术',
       dll: true,
       
       routes: {

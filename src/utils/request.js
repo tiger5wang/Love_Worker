@@ -32,7 +32,7 @@ function checkStatus(response) {
     if (response.status) {
       // console.log('--->', codeMessage[response.status])
       if (response.status >= 200 && response.status < 300) {
-        Storage.set(sk_user_token, response.token)
+        Storage.set(sk_user_token, response.data.token)
         response.success = true; //eslint-disable-line
         return result;
       }
@@ -61,10 +61,10 @@ async function request(url, options) {
   const newOptions = { ...defaultOptions, ...options };
   // body 添加token
   if (newOptions.body) {
-    newOptions.body.__token__ =  await Storage.get(sk_user_token);
+    newOptions.body.token =  await Storage.get(sk_user_token);
   } else {
     newOptions.body = {
-      __token__: await Storage.get(sk_user_token),
+      token: await Storage.get(sk_user_token),
     };
   }
   if (

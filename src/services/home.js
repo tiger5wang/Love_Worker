@@ -14,3 +14,13 @@ export async function webHeader(params) {
 export async function searchWebdata(params) {
   return proxyRequest.get('/users/filter_huashu/', params);
 }
+
+
+// 用户注册
+export async function registerUserInfo(params) {
+  return proxyRequest.get('/users/register_user/', params);
+}
+// 用户登录
+export async function loginUserInfo(params) {
+  return proxyRequest.get('/users/web_login_user/', params);
+}

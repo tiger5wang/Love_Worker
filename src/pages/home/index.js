@@ -3,6 +3,7 @@ import {connect} from 'dva'
 import {TabBar} from 'antd-mobile'
 import styles from './index.css';
 import SessionCategoryList from './SessionCategoryList'
+import ReginterPage from '../LoginPage/register'
 
 
 class Home extends Component {
@@ -64,7 +65,7 @@ class Home extends Component {
               });
             }}
           >
-            {<SessionCategoryList/>}
+            {<ReginterPage/>}
           </TabBar.Item>
 
         </TabBar>

@@ -36,11 +36,6 @@ class HuaShuList extends Component {
     const {searchData} = this.props;
     const{data} = searchData;
 
-    console.log(JSON.stringify(this.props))
-
-    const PlaceHolder = ({ className = '', ...restProps }) => (
-      <div className={`${className} placeholder`} {...restProps}>Block</div>
-    );
 
     return (
       <div>
