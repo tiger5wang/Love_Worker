@@ -3,7 +3,6 @@ import {connect} from 'dva'
 import {WingBlank, SearchBar, Toast, } from 'antd-mobile'
 import styles from './index.css';
 import router from 'umi/router';
-import { Storage } from '@/utils';
 import { sk_user_token } from '@/config/StorageKeys';
 
 
@@ -80,7 +79,9 @@ class SessionCategoryList extends Component {
                   {
                     item.data && item.data.length> 0 && item.data.map((item2, index2) => {
                       return (
+                        <a href="" className={styles.link}>
                           <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id, item2.name)}>{item2.name}</button>
+                        </a>
                       )
                     })
                   }
