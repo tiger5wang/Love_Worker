@@ -30,19 +30,15 @@ class SessionCategoryList extends Component {
   }
 
   gotoWordsList = (Id, Name) => {
-
-    if(this.token === undefined || this.token === 'undefined' || this.token === ""){
-     Toast.offline('请您登录之后查看');
-     return
-    }else{
       router.push({
         pathname: '/wordsList',
         query: {
           id: Id,
           name: Name,
+          token: this.token
         },
     })
-    }
+    // }
   };
 
   loadData = () =>{

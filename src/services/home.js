@@ -24,3 +24,13 @@ export async function registerUserInfo(params) {
 export async function loginUserInfo(params) {
   return proxyRequest.get('/users/web_login_user/', params);
 }
+
+
+export async function GetUserInfo(params) {
+  return proxyRequest.get('/users/web_get_user_info/', params);
+}
+
+// 获取文章列表
+export async function GetCeontextList(params) {
+  return proxyRequest.get('/users/web_context_list/', params);
+}

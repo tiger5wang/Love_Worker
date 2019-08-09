@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Icon, Flex, WhiteSpace} from 'antd-mobile'
+import {Icon, Flex, List} from 'antd-mobile'
 import router from 'umi/router';
 import styles from './index.css';
+import { sk_user_token } from '@/config/StorageKeys';
+
+
+
+const Item = List.Item;
+const Brief = Item.Brief;
 
 class WordsList extends Component {
   constructor(props) {
@@ -22,13 +28,16 @@ class WordsList extends Component {
 
   componentDidMount() {
     this.id = window.location.href.split('?')[1].split('=')[1];
-    this.loadData()
+    this.loadData();
   }
 
 
   returnPage = () => {
     router.push({
       pathname: '/',
+      query: {
+        token: this.props.location.query.token
+      },
     });
   };
 
@@ -54,13 +63,18 @@ class WordsList extends Component {
         {wordsLists && wordsLists.length > 0 && wordsLists.map((item, index) => {
           let context = item.context.split('^');
           return(
-            <div className={styles.content}>
+              <div className={styles.content}>
               {context.map((data) => {
+                console.log(data)
                 return (
-                   <p>{data}</p>
+                   <div>
+                       {data}
+                     </div>
                   )
               })}
             </div>
+
+
           )
         })}
       </div>

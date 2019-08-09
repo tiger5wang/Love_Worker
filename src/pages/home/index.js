@@ -4,6 +4,7 @@ import {TabBar} from 'antd-mobile'
 import styles from './index.css';
 import SessionCategoryList from './SessionCategoryList'
 import ReginterPage from '../LoginPage/register'
+import ContextPage from '../ContextList/textList'
 
 
 class Home extends Component {
@@ -51,7 +52,7 @@ class Home extends Component {
               });
             }}
           >
-            {<SessionCategoryList/>}
+            {<ContextPage/>}
           </TabBar.Item>
           <TabBar.Item
             icon={<div className={styles.icon}/>}

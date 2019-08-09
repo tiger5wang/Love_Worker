@@ -4,7 +4,7 @@ __author__ = 'YongCong Wu'
 @Email   :  : 1922878025@qq.com
 */
 import React, {Component} from 'react';
-import { Button, Flex, InputItem, List } from 'antd-mobile';
+import { Button, Flex, InputItem, List, Toast } from 'antd-mobile';
 import { connect } from 'dva';
 import { createForm } from 'rc-form';
 import router from 'umi/router';
@@ -26,9 +26,19 @@ class loginuser extends Component {
         password: userInfo.password,
       },
       callback: response => {
-        router.push({
-          pathname: '/home/SessionCategoryList',
-        });
+        // router.push({
+        //   pathname: '/home',
+        // });
+        if(response.code===200){
+          router.push({
+            pathname: '/LoginPage/pagelogin',
+            query: {
+              id: response.ID,
+            },
+         });
+        }else{
+           Toast.offline(response.message);
+        }
       },
     });
   };

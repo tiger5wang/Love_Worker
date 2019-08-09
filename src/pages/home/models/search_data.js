@@ -10,7 +10,6 @@ export default {
   effects: {
     * postSearchData({ payload }, { call, put }) {
       const response = yield call(searchWebdata, payload);
-      console.log(JSON.stringify(response))
 
         yield put({
           type: 'show',
