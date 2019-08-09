@@ -5,7 +5,9 @@ import styles from './index.css';
 import SessionCategoryList from './SessionCategoryList'
 import ReginterPage from '../LoginPage/register'
 import ContextPage from '../ContextList/textList'
-
+import { sk_user_token } from '@/config/StorageKeys';
+import ProfileCenter from '@/pages/profileCenter'
+// import Pagelogin from './pagelogin'
 
 class Home extends Component {
   constructor(props){
@@ -13,6 +15,15 @@ class Home extends Component {
     this.state = {
       directorList: [],
       selectedTab: 'words'
+    };
+    this.user = false
+  }
+
+  componentDidMount() {
+    let userInfo = JSON.parse(localStorage.getItem('MSUser'));
+    this.token = localStorage.getItem(sk_user_token);
+    if(userInfo && userInfo.username && this.token) {
+      this.user = true
     }
   }
 
@@ -66,7 +77,7 @@ class Home extends Component {
               });
             }}
           >
-            {<ReginterPage/>}
+            {<ProfileCenter/>}
           </TabBar.Item>
 
         </TabBar>

@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-
+import {sk_user_token} from '@/config/StorageKeys'
 import styles from './textListCSS.css';
 
 import { ListView } from 'antd-mobile';
+import { Toast } from 'antd-mobile/lib/index';
 
 
 
@@ -20,9 +21,9 @@ class textList extends Component {
   }
 
 
-
-
   componentDidMount(){
+     this.userInfo = JSON.parse(localStorage.getItem('MSUser'));
+     this.token = localStorage.getItem(sk_user_token);
     this.get_dataList()
   }
 
@@ -39,16 +40,18 @@ class textList extends Component {
          })
        }
      })
-  }
+  };
 
+  gotoDetail = () => {
+    if(this.userInfo && this.userInfo.username && this.token) {
 
+    } else {
+      Toast.offline('超级会员专享，来升级会员吧~~~');
+    }
+  };
 
   render() {
-
      const {data} = this.state;
-
-
-
 
     return(
       <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
@@ -59,7 +62,7 @@ class textList extends Component {
         {data && data.length > 0 && data.map((item, index) => {
           console.log(JSON.stringify(item))
           return (
-            <div className={styles.content}>
+            <div className={styles.content} onClick={this.gotoDetail}>
                   <div style={{ padding: '0 15px' }}>
                     <div style={{ display: 'flex', padding: '15px 0' }}>
                       <img style={{ height: '64px', marginRight: '15px' }} src={item.img_Path} alt=""/>

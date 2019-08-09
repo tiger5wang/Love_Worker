@@ -1,32 +1,28 @@
 import { GetUserInfo, } from '../../../services/home';
-import router from 'umi/router';
-import {Toast} from 'antd-mobile';
 
 export default {
   namespace: 'UserInfo',
   state: {
-    username:"",
-    userType:"",
-    message:"",
-    code:0,
-    token:"",
-    create_time:""},
+    userInfo:"",
+  },
   effects: {
      * postUserInfo({ payload, callback }, { call, put }) {
       const response = yield call(GetUserInfo, payload);
 
       if (response && response.code === 200) {
         callback && callback(response);}
-
+        yield put({
+          type: 'userInfo',
+          payload: response.data
+        })
     },
-
-     reducers: {
-        show(state, { payload }) {
-            return {
-                ...state,
-                ...payload,
-            };
-        },
-    },
-  }
+  },
+  reducers: {
+    userInfo(state, { payload }) {
+      return {
+        ...state,
+        userInfo: payload,
+      };
+    }
+  },
 }

@@ -14,7 +14,7 @@ import { sk_user_token } from '@/config/StorageKeys';
 const Item = List.Item;
 
 
-class pagelogin extends Component {
+class ProfileCenter extends Component {
   constructor(props) {
     super(props);
     this.state={
@@ -30,9 +30,9 @@ class pagelogin extends Component {
 
     const{dispatch, location} = this.props;
     dispatch({
-      type:'UserInfo/postUserInfo',
+      type:'profileCenter/postUserInfo',
       payload:{
-          id : location.query.id
+        id : 11
       },
       callback: response=>{
         let user = {
@@ -88,7 +88,7 @@ class pagelogin extends Component {
         <Flex justify='center' style={{marginTop: 100}}>
           <img style={{width:100, height:100, borderRadius:'50%'}} src="https://www.wuyongcong.com/uploads/201903/avatar_15906d9cfe68cc32_small.jpeg"  alt="头像" />
         </Flex>
-         <Flex justify='center'>
+        <Flex justify='center'>
           <h3>会员级别: {userType}</h3>
         </Flex>
         <Flex justify='center'>
@@ -116,8 +116,8 @@ class pagelogin extends Component {
 }
 
 
-export default connect(({userInfo}) => ({
-  userInfo
-}))(pagelogin)
+export default connect(({profileCenter}) => ({
+  profileCenter
+}))(ProfileCenter)
 
 

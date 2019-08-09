@@ -13,7 +13,6 @@ import router from 'umi/router';
 
 class loginuser extends Component {
 
-
   subMitLogin = () => {
     const { dispatch, form } = this.props;
     const userInfo = form.getFieldsValue();

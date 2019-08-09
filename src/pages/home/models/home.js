@@ -1,4 +1,4 @@
-import { directorList, webHeader } from '../../../services/home';
+import { directorList } from '../../../services/home';
 
 export default {
   namespace: 'home',

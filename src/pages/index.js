@@ -3,7 +3,8 @@ import Home from '@/pages/home';
 
 
 export default function() {
-  return (
+    return (
       <Home/>
-  );
+    );
+
 }
