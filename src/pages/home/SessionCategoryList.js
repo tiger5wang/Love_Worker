@@ -75,9 +75,7 @@ class SessionCategoryList extends Component {
                   {
                     item.data && item.data.length> 0 && item.data.map((item2, index2) => {
                       return (
-                        <a href="" className={styles.link}>
                           <button className={styles.btn} onClick={() => this.gotoWordsList(item2.id, item2.name)}>{item2.name}</button>
-                        </a>
                       )
                     })
                   }

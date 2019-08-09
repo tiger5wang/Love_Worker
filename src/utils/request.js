@@ -32,7 +32,9 @@ function checkStatus(response) {
     if (response.status) {
       // console.log('--->', codeMessage[response.status])
       if (response.status >= 200 && response.status < 300) {
-        Storage.set(sk_user_token, response.data.token)
+        if(response.data.token) {
+          Storage.set(sk_user_token, response.data.token)
+        }
         response.success = true; //eslint-disable-line
         return result;
       }
@@ -97,6 +99,7 @@ async function request(url, options) {
     // new_url = url + '?' + setUrlEncoded(newOptions.body)
     delete newOptions.body
   }
+  // console.log('options', newOptions)
   return axios
     .create()
     .request({

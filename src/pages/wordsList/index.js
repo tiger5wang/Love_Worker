@@ -64,8 +64,7 @@ class WordsList extends Component {
           let context = item.context.split('^');
           return(
               <div className={styles.content}>
-              {context.map((data) => {
-                console.log(data)
+              {context.slice(0,4).map((data, index) => {
                 return (
                    <div>
                        {data}
@@ -73,8 +72,6 @@ class WordsList extends Component {
                   )
               })}
             </div>
-
-
           )
         })}
       </div>
