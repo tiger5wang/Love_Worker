@@ -21,7 +21,8 @@ class ProfileCenter extends Component {
       username: '',
       create_time:'',
       userType: '',
-      token:''
+      token:'',
+      id: 0
     };
   }
 
@@ -29,10 +30,11 @@ class ProfileCenter extends Component {
     this.getStorage()
 
     const{dispatch, location} = this.props;
+    const{id} = this.state;
     dispatch({
       type:'profileCenter/postUserInfo',
       payload:{
-        id : 11
+        id : id
       },
       callback: response=>{
         let user = {
@@ -45,8 +47,8 @@ class ProfileCenter extends Component {
           username: response.username,
           userType: response.userType,
           create_time: response.create_time,
+          id: response.ID
         })
-        console.log(response)
       }
     })
 
