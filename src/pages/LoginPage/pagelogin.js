@@ -21,12 +21,16 @@ class pagelogin extends Component {
       username: '',
       create_time:'',
       userType: '',
-      token:''
+      token:'',
+      kefu:'',
+      huiyuan:''
     };
   }
 
   componentDidMount(){
     this.getStorage()
+    this.hyJS()
+    this.get_kefu()
 
     const{dispatch, location} = this.props;
     dispatch({
@@ -69,41 +73,44 @@ class pagelogin extends Component {
     });
   };
 
-  hyJS= num => {
-    console.log(num)
+
+  get_kefu = ()=>{
+      const{dispatch} = this.props;
+     dispatch({
+      type:'SettingsInfo/getSettingsInfo',
+      payload: {},
+      callback: response => {
+          if(response.code===200){
+            this.setState({
+              kefu: response.kf
+            })
+        }else{
+          Toast.offline(response.message);
+        }
+      }
+    })
+  }
+
+  hyJS= () => {
     const{dispatch} = this.props;
-    if(num===1){
       dispatch({
       type:'SettingsInfo/postSettingsInfo',
       payload: {},
       callback: response => {
         if(response.code===200){
-           Toast.success(response.hy)
+          this.setState({
+            huiyuan: response.hy
+          })
         }else{
           Toast.offline(response.message);
         }
       }
     })
-    }else{
-      dispatch({
-      type:'SettingsInfo/getSettingsInfo',
-      payload: {},
-      callback: response => {
-          if(response.code===200){
-           Toast.success(response.kf)
-        }else{
-          Toast.offline(response.message);
-        }
-      }
-    })
-    }
-
-
   }
 
   render() {
 
-    const{username, userType, create_time} = this.state;
+    const{username, userType, create_time, kefu, huiyuan} = this.state;
 
     return (
       <div style={{backgroundColor:'#fff',position: 'fixed', height: '100%', width: '100%', top: 0}}>
@@ -128,17 +135,22 @@ class pagelogin extends Component {
         <Flex justify='center'>
           <h3>注册时间: {create_time}</h3>
         </Flex>
-
-        <List  className="my-list" style={{marginTop: 80}}>
-          <Item arrow="horizontal" multipleLine onClick={()=>this.hyJS(1)}>
-            会员介绍
-          </Item>
-        </List>
-        <List className="my-list">
-          <Item arrow="horizontal" multipleLine onClick={() =>this.hyJS(2)}>
-            联系客服
-          </Item>
-        </List>
+        <Flex justify='start' style={{marginTop: 80}}>
+          <h3>会员介绍:</h3>
+        </Flex>
+        <Flex justify='start'>
+          <p>
+            {huiyuan}
+          </p>
+        </Flex>
+         <Flex justify='start' style={{marginTop: 15}}>
+          <h3>联系客服:</h3>
+        </Flex>
+         <Flex justify='start'>
+          <p>
+            {kefu}
+          </p>
+        </Flex>
       </div>
     );
   }
