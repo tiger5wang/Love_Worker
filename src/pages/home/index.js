@@ -77,7 +77,7 @@ class Home extends Component {
               });
             }}
           >
-            {<ProfileCenter/>}
+            {this.user ? <ProfileCenter/>: <ReginterPage/>}
           </TabBar.Item>
 
         </TabBar>
