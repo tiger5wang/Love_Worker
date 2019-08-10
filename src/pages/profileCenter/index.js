@@ -86,7 +86,7 @@ class ProfileCenter extends Component {
         </div>
 
         <Flex justify='center' style={{marginTop: 100}}>
-          <img style={{width:100, height:100, borderRadius:'50%'}} src="https://www.wuyongcong.com/uploads/201903/avatar_15906d9cfe68cc32_small.jpeg"  alt="头像" />
+          <img style={{width:100, height:100, borderRadius:'50%'}} src="http://img.zzai.com.cn/2018/08/1533136393.jpg@!w_75h_75_zc"  alt="头像" />
         </Flex>
         <Flex justify='center'>
           <h3>会员级别: {userType}</h3>

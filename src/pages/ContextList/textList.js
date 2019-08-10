@@ -67,7 +67,7 @@ class textList extends Component {
                     <div style={{ display: 'flex', padding: '15px 0' }}>
                       <img style={{ height: '64px', marginRight: '15px' }} src={item.img_Path} alt=""/>
                       <div style={{ lineHeight: 1 }}>
-                        <div style={{marginTop:10}}><span style={{ fontSize: '15px' }}>文章标题: </span><span
+                        <div style={{marginTop:10}}><span style={{ fontSize: '15px' }}>秘籍标题: </span><span
                           style={{ fontSize: '15px' }}>{item.title}</span></div>
                         <div style={{marginTop:20}}><span style={{ fontSize: '15px' }}>发布时间: </span><span
                           style={{ fontSize: '15px' }}>{item.create_time}</span></div>
