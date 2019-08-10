@@ -34,3 +34,18 @@ export async function GetUserInfo(params) {
 export async function GetCeontextList(params) {
   return proxyRequest.get('/users/web_context_list/', params);
 }
+
+
+// 获取文章详情
+export async function GetContextInfo(params) {
+  return proxyRequest.get('/users/web_get_contextInfo/', params);
+}
+
+// 获取会员介绍，微信客服
+export async function GetWebSettingInfo(params) {
+  return proxyRequest.get('/users/web_get_setting_info/', params);
+}
+
+export async function GetWebSettingInfoTwo(params) {
+  return proxyRequest.get('/users/web_get_setting_infotwo/', params);
+}

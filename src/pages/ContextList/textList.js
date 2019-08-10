@@ -5,6 +5,7 @@ import styles from './textListCSS.css';
 
 import { ListView } from 'antd-mobile';
 import { Toast } from 'antd-mobile/lib/index';
+import router from 'umi/router';
 
 
 
@@ -42,8 +43,16 @@ class textList extends Component {
      })
   };
 
-  gotoDetail = () => {
-    if(this.userInfo && this.userInfo.username && this.token) {
+  gotoDetail = (contextID, title) => {
+    if(this.userInfo && this.userInfo.userType==="超级会员" && this.token) {
+      // Toast.success(contextID);
+      router.push({
+        pathname: '/ContextList/contextInfo',
+        query: {
+          ID: contextID,
+          Title: title
+        },
+      });
 
     } else {
       Toast.offline('超级会员专享，来升级会员吧~~~');
@@ -62,7 +71,7 @@ class textList extends Component {
         {data && data.length > 0 && data.map((item, index) => {
           console.log(JSON.stringify(item))
           return (
-            <div className={styles.content} onClick={this.gotoDetail}>
+            <div className={styles.content} onClick={() => this.gotoDetail(item.id, item.title)}>
                   <div style={{ padding: '0 15px' }}>
                     <div style={{ display: 'flex', padding: '15px 0' }}>
                       <img style={{ height: '64px', marginRight: '15px' }} src={item.img_Path} alt=""/>

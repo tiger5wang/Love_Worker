@@ -1,10 +1,8 @@
 // import fetch from 'dva/fetch';
 import axios from 'axios'
 import { Toast } from 'antd-mobile';
-import { setUrlEncoded,setFormData } from './baseServer';
 import {Storage} from './index'
 import {sk_user_token} from '../config/StorageKeys'
-import router from 'umi/router';
 import {UrlConfig} from '../config/config'
 
 const codeMessage = {

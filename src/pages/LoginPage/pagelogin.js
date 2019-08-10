@@ -4,7 +4,7 @@ __author__ = 'YongCong Wu'
 @Email   :  : 1922878025@qq.com
 */
 import React,{Component} from 'react';
-import {Flex, List, Icon} from 'antd-mobile';
+import { Flex, List, Icon, Toast } from 'antd-mobile';
 import styles from '@/pages/home/index.css';
 import { connect } from 'dva';
 import router from 'umi/router';
@@ -46,7 +46,6 @@ class pagelogin extends Component {
           userType: response.userType,
           create_time: response.create_time,
         })
-        console.log(response)
       }
     })
 
@@ -70,6 +69,38 @@ class pagelogin extends Component {
     });
   };
 
+  hyJS= num => {
+    console.log(num)
+    const{dispatch} = this.props;
+    if(num===1){
+      dispatch({
+      type:'SettingsInfo/postSettingsInfo',
+      payload: {},
+      callback: response => {
+        if(response.code===200){
+           Toast.success(response.hy)
+        }else{
+          Toast.offline(response.message);
+        }
+      }
+    })
+    }else{
+      dispatch({
+      type:'SettingsInfo/getSettingsInfo',
+      payload: {},
+      callback: response => {
+          if(response.code===200){
+           Toast.success(response.kf)
+        }else{
+          Toast.offline(response.message);
+        }
+      }
+    })
+    }
+
+
+  }
+
   render() {
 
     const{username, userType, create_time} = this.state;
@@ -86,7 +117,7 @@ class pagelogin extends Component {
         </div>
 
         <Flex justify='center' style={{marginTop: 100}}>
-          <img style={{width:100, height:100, borderRadius:'50%'}} src="http://img.zzai.com.cn/2018/08/1533136393.jpg@!w_75h_75_zc"  alt="头像" />
+          <img style={{width:100, height:100, borderRadius:'50%'}} src="https://i.loli.net/2019/08/10/RPMitd6SIVe8nfw.jpg"  alt="头像" />
         </Flex>
          <Flex justify='center'>
           <h3>会员级别: {userType}</h3>
@@ -99,14 +130,12 @@ class pagelogin extends Component {
         </Flex>
 
         <List  className="my-list" style={{marginTop: 80}}>
-          <Item arrow="horizontal" multipleLine onClick={() => {
-          }}>
+          <Item arrow="horizontal" multipleLine onClick={()=>this.hyJS(1)}>
             会员介绍
           </Item>
         </List>
         <List className="my-list">
-          <Item arrow="horizontal" multipleLine onClick={() => {
-          }}>
+          <Item arrow="horizontal" multipleLine onClick={() =>this.hyJS(2)}>
             联系客服
           </Item>
         </List>
@@ -116,8 +145,9 @@ class pagelogin extends Component {
 }
 
 
-export default connect(({userInfo}) => ({
-  userInfo
+export default connect(({userInfo, SettingsInfo}) => ({
+  userInfo,
+  SettingsInfo
 }))(pagelogin)
 
 
