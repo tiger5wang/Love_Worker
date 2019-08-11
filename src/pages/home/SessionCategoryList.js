@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import {WingBlank, SearchBar, Toast, } from 'antd-mobile'
+import { WingBlank, SearchBar, Toast,Flex, Button, InputItem, List } from 'antd-mobile';
 import styles from './index.css';
+import { createForm } from 'rc-form';
 import router from 'umi/router';
 import { sk_user_token } from '@/config/StorageKeys';
 
@@ -50,22 +51,38 @@ class SessionCategoryList extends Component {
     })
   };
 
-  SearchValue= (value) => {
+  SearchValue = () => {
+    const { form } = this.props;
+    const userInfo = form.getFieldsValue();
     router.push({
       pathname: '/home/HuaShuList',
       query: {
-        filterData: value,
+        filterData: userInfo.HuShu,
       },
     });
   };
 
   render() {
+
+    const { getFieldProps } = this.props.form;
     return(
       <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
         <div className={styles.header}>
           <span className={styles.headerFont}>{this.props.header.name}</span>
         </div>
-        <SearchBar placeholder="搜索话术" onChange={this.SearchValue}/>
+        {/*<SearchBar placeholder="搜索话术" onChange={this.SearchValue}/>*/}
+        <Flex justify="between">
+          <InputItem
+          {...getFieldProps('HuShu',
+          )}
+          placeholder="请输入要搜索的话术"
+          clear={true}
+        >搜索话术:</InputItem>
+          <Flex>
+             <Button type="ghost" inline size="small" style={{ marginRight: '4px' }} onClick={()=>this.SearchValue()}>搜索</Button>
+          </Flex>
+
+        </Flex>
         <WingBlank>
           {this.props.directorList.length > 0 && this.props.directorList.map((item, index) => {
             return(
@@ -90,7 +107,16 @@ class SessionCategoryList extends Component {
 }
 
 
-export default connect(({home, header}) => ({
-  directorList: home.directorList,
+// export default connect(({home, header}) => ({
+//   directorList: home.directorList,
+//   header
+// }))(SessionCategoryList)
+
+
+const SessionCategory = createForm()(SessionCategoryList);
+export default connect(({home, header})=>{
+  return {
+     directorList: home.directorList,
   header
-}))(SessionCategoryList)
+  };
+})(SessionCategory)
