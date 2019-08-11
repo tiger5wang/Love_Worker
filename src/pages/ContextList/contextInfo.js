@@ -24,7 +24,6 @@ class contextInfo extends Component {
 
   get_context_info =() =>{
     const{dispatch, location} = this.props;
-    console.log(JSON.stringify(this.props))
     dispatch({
       type:'postContext/postContextInfo',
       payload:{

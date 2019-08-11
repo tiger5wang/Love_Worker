@@ -8,7 +8,6 @@ export default {
   effects: {
     * getContextList({ payload, callback }, { call, put }) {
       const response = yield call(GetCeontextList, payload);
-      console.log(JSON.stringify(response))
       if (response && response.code === 200) {
         callback && callback(response);
         yield put({

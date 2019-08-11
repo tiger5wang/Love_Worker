@@ -16,7 +16,6 @@ class loginuser extends Component {
   subMitLogin = () => {
     const { dispatch, form } = this.props;
     const userInfo = form.getFieldsValue();
-    console.log(JSON.stringify(userInfo));
 
     dispatch({
       type: 'LoginModalUser/postLogin',

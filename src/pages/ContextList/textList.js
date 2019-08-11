@@ -35,7 +35,6 @@ class textList extends Component {
        type:'PostDataList/getContextList',
        payload:{},
        callback: response => {
-         console.log(JSON.stringify(response))
          this.setState({
            data: response.data
          })
@@ -69,7 +68,6 @@ class textList extends Component {
         </div>
 
         {data && data.length > 0 && data.map((item, index) => {
-          console.log(JSON.stringify(item))
           return (
             <div className={styles.content} onClick={() => this.gotoDetail(item.id, item.title)}>
                   <div style={{ padding: '0 15px' }}>

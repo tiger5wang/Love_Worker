@@ -49,7 +49,6 @@ class HuaShuList extends Component {
           </Flex>
         </div>
         {searchData && searchData.length > 0 && searchData.map((item, index) => {
-          console.log(item)
           let context = item.content.split('^');
           // let context = ''
           return(

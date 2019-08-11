@@ -26,7 +26,6 @@ class registerlofin extends Component {
           password: userInfo.password
       },
       callback: response=>{
-        console.log(JSON.stringify(response))
          router.push({
           pathname: '/',
            query: {
