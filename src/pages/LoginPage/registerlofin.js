@@ -28,7 +28,7 @@ class registerlofin extends Component {
       callback: response=>{
         console.log(JSON.stringify(response))
          router.push({
-          pathname: '/home/SessionCategoryList',
+          pathname: '/',
            query: {
              token: response.token,
            },
