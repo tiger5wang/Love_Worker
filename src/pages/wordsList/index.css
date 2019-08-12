@@ -37,6 +37,14 @@
   font-size: .8rem
 }
 
+.sizeStyle {
+  overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 300px;
+}
+
+
 
 
 h1 {text-align:center;}

@@ -41,6 +41,26 @@ class WordsList extends Component {
     });
   };
 
+  listDataInfo = dataID => {
+    if(this.props.location.query.filterData){
+       router.push({
+      pathname: '/wordsList/datainfo',
+      query: {
+        filterData: this.props.location.query.filterData,
+      },
+    });
+    } else {
+      router.push({
+        pathname: '/wordsList/datainfo',
+        query: {
+          uid: dataID,
+          titid: this.props.location.query.id,
+          name: this.props.location.query.name,
+        },
+      });
+    }
+
+  };
 
 
   render() {
@@ -61,16 +81,18 @@ class WordsList extends Component {
           </Flex>
         </div>
         {wordsLists && wordsLists.length > 0 && wordsLists.map((item, index) => {
-          let context = item.context.split('^');
+          // let context = item.context.split('^');
           return(
               <div className={styles.content}>
-              {context.slice(0,4).map((data, index) => {
-                return (
+              {/*{context.slice(0,4).map((data, index) => {*/}
+                {/*return (*/}
                    <div>
-                       {data}
+                     <p className={styles.sizeStyle} onClick={() => this.listDataInfo(item.ID)}>{item.context.replace('^', "").replace("^", "")}</p>
+
                      </div>
-                  )
-              })}
+                  {/*)*/}
+              {/*}*/}
+                {/*)}*/}
             </div>
           )
         })}

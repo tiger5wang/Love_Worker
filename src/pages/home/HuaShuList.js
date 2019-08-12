@@ -31,6 +31,20 @@ class HuaShuList extends Component {
   };
 
 
+  listDataInfo = dataID => {
+    router.push({
+      pathname: '/wordsList/datainfo',
+      query: {
+        uid: dataID,
+        titid: this.props.location.query.id,
+        name: this.props.location.query.name,
+        filterData: this.props.location.query.filterData,
+
+      },
+    });
+  };
+
+
 
   render() {
     const {searchData} = this.props;
@@ -49,15 +63,14 @@ class HuaShuList extends Component {
           </Flex>
         </div>
         {searchData && searchData.length > 0 && searchData.map((item, index) => {
-          let context = item.content.split('^');
+          // let context = item.content.split('^');
           // let context = ''
           return(
             <div className={styles.content}>
-              {context.map((dt) => {
-                return (
-                   <p>{dt}</p>
-                  )
-              })}
+
+                     <p className={styles.sizeStyle} onClick={() => this.listDataInfo(item.id)}>{item.content.replace('^', "").replace("^", "")}</p>
+
+
             </div>
           )
         })}
