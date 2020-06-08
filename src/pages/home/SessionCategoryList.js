@@ -166,8 +166,10 @@ class SessionCategoryList extends Component {
 
 
     return(
-      <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
-
+      <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}
+           onScroll={() => console.log('11111111111111111111111')}
+           onScrollCapture={() => console.log('2222222222222222222222222')}
+      >
         <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
 
         {/*轮播图*/}
@@ -213,10 +215,10 @@ class SessionCategoryList extends Component {
 
                 return (
                   <div key={item.id}
-                       style={{width: window.innerWidth / 2 -20, height: window.innerWidth / 2, marginLeft: index % 2 === 1? 10: 0, marginTop: 10}}>
+                       style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
                     <a
-                      key={item.id}
-                      style={{ width: '100%', height: '100%', }}
+                      style={{ width: '100%', height: '100%'}}
+                      onClick={() => console.log('click')}
                     >
                       <img
                         src={this.state[`preloadImg${index}`] ? preloadImg: item.image }
@@ -224,12 +226,13 @@ class SessionCategoryList extends Component {
                         style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
                         onLoad={() => {
                           window.dispatchEvent(new Event('resize'));
-                          this.setState({ imgHeight: 'auto' });
+                          // this.setState({ imgHeight: 'auto' });
                         }}
                         onError={() => {this.setState({[`preloadImg${index}`]: true})}}
                       />
                       <WhiteSpace size={'sm'}/>
-                      <span className={styles.title}>{item.name}</span>
+                      <p className={styles.title}>{item.name}</p>
+                      <WhiteSpace size={'sm'}/>
                       <p style={{color: 'red'}}>{item.cs}人付款</p>
                     </a>
                   </div>
@@ -247,7 +250,6 @@ class SessionCategoryList extends Component {
 const SessionCategory = createForm()(SessionCategoryList);
 export default connect(({home, header})=>{
   return {
-     directorList: home.directorList,
-  header
+    header
   };
 })(SessionCategory)
