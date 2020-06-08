@@ -4,10 +4,10 @@ import {TabBar} from 'antd-mobile'
 import styles from './index.css';
 import SessionCategoryList from './SessionCategoryList'
 import ReginterPage from '../LoginPage/register'
-import ContextPage from '../ContextList/textList'
 import { sk_user_token } from '@/config/StorageKeys';
 import ProfileCenter from '@/pages/profileCenter'
-// import Pagelogin from './pagelogin'
+import ZaiXian from '@/pages/home/ZaiXian';
+import router from 'umi/router';
 
 class Home extends Component {
   constructor(props){
@@ -27,17 +27,23 @@ class Home extends Component {
     }
   }
 
+  routerZaiXian = () => {
+    router.push({
+      pathname: '/home/ZaiXian',
+    });
+  };
+
   render() {
     return(
       <div style={{ position: 'fixed', height: '100%', width: '100%', top: 0}}>
         <TabBar
           unselectedTintColor="#949494"
-          tintColor={'#ff790c'}
+          tintColor={'#ec1a5b'}
           barTintColor="white"
           hidden={this.state.hidden}
         >
           <TabBar.Item
-            title="情话"
+            title="首页"
             key="wordsv"
             icon={<div className={styles.words}/>}
             selectedIcon={<div className={styles.words_selected}/>
@@ -52,23 +58,27 @@ class Home extends Component {
             {<SessionCategoryList/>}
           </TabBar.Item>
           <TabBar.Item
-            icon={<div className={styles.middle}/>}
-            selectedIcon={<div className={styles.middle_selected}/>}
-            title="撩妹技巧"
-            key="middle"
-            selected={this.state.selectedTab === 'middle'}
+            icon={<div className={styles.shexiangtouIcon}/>}
+            selectedIcon={<div className={styles.wordSelectIcon}/>}
+            title="分类"
+            key="laoshi"
+            selected={this.state.selectedTab === 'laoshi'}
+
+            // onPress={() => {this.routerZaiXian()}}
+
             onPress={() => {
               this.setState({
-                selectedTab: 'middle',
+                selectedTab: 'laoshi',
               });
             }}
           >
-            {<ContextPage/>}
+             {<ZaiXian/>}
           </TabBar.Item>
+
           <TabBar.Item
             icon={<div className={styles.icon}/>}
             selectedIcon={<div className={styles.icon_selected}/>}
-            title="个人中心"
+            title="已购"
             key="account"
             selected={this.state.selectedTab === 'account'}
             onPress={() => {

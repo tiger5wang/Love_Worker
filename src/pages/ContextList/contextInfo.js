@@ -1,8 +1,4 @@
-/*
-__author__ = 'YongCong Wu'
-@Time    : 2019/8/10 11:45
-@Email   :  : 1922878025@qq.com
-*/
+
 import React, {Component} from 'react';
 import styles from '@/pages/wordsList/index.css';
 import { Flex, Icon, Toast } from 'antd-mobile';
@@ -65,7 +61,7 @@ class contextInfo extends Component {
           </Flex>
         </div>
         <div style={{marginTop:50}}>
-           <p style={{fontSize: 15, lineHeight: 2, marginTop: 15}}>{context}</p>
+           <p style={{fontSize: 20, lineHeight: 2.5, marginTop: 10,margin: 34}}>{context}</p>
         </div>
       </div>
     );

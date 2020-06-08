@@ -1,4 +1,4 @@
-import { GetWebSettingInfoTwo, GetWebSettingInfo} from '../../../services/home';
+import { GetWebSettingInfoTwo,} from '../../../services/home';
 
 export default {
   namespace: 'SettingsInfo',
@@ -7,7 +7,7 @@ export default {
   },
   effects: {
      * postSettingsInfo({ payload, callback }, { call, put }) {
-      const response = yield call(GetWebSettingInfo, payload);
+      const response = yield call(GetWebSettingInfoTwo, payload);
 
       if (response && response.code === 200) {
         callback && callback(response);}

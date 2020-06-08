@@ -1,10 +1,6 @@
-/*
-__author__ = 'YongCong Wu'
-@Time    : 2019/8/8 20:14
-@Email   :  : 1922878025@qq.com
-*/
+
 import React, {Component} from 'react';
-import { Flex, InputItem, List, Button } from 'antd-mobile';
+import { Flex, InputItem, List, Button, Toast } from 'antd-mobile';
 import { connect } from 'dva';
 import { createForm } from 'rc-form';
 import router from 'umi/router';
@@ -26,12 +22,18 @@ class registerlofin extends Component {
           password: userInfo.password
       },
       callback: response=>{
-         router.push({
-          pathname: '/',
-           query: {
-             token: response.token,
-           },
-        });
+        if(response.code===200){
+          Toast.success(response.message)
+        //   router.push({
+        //   pathname: '/',
+        //    query: {
+        //      token: response.token,
+        //    },
+        // });
+        }else{
+          Toast.offline(response.message);
+        }
+
       }
     })
   };
@@ -62,7 +64,11 @@ class registerlofin extends Component {
 
         </Flex>
         <Flex style={{marginTop: 70}} justify='center'>
-           <Button type="primary" style={{width: 100}} onClick={() => this.postRegister()}>注册</Button>
+          <Button type="primary" style={{ width: 100 }} onClick={() => this.postRegister()}>注册</Button>
+        </Flex>
+
+        <Flex justify='center' style={{ marginTop: 50 }}>
+          版权:【最终解释权归本人所有,此系统仅供学习参考，请勿用于非法用途】
         </Flex>
 
       </div>

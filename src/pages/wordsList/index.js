@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Icon, Flex, List} from 'antd-mobile'
+import { Icon, Flex, List, Button } from 'antd-mobile';
 import router from 'umi/router';
 import styles from './index.css';
 import { sk_user_token } from '@/config/StorageKeys';
@@ -84,15 +84,13 @@ class WordsList extends Component {
           // let context = item.context.split('^');
           return(
               <div className={styles.content}>
-              {/*{context.slice(0,4).map((data, index) => {*/}
-                {/*return (*/}
-                   <div>
-                     <p className={styles.sizeStyle} onClick={() => this.listDataInfo(item.ID)}>{item.context.replace('^', "").replace("^", "")}</p>
+                <div>
+                  <Flex justify='between'>
+                    <p className={styles.sizeStyle}>{item.context.replace('^', '').replace('^', '')}</p>
+                     <Button size='small' style={{ backgroundColor: '#ec1a5b' }} onClick={() => this.listDataInfo(item.ID)}>查看</Button>
+                  </Flex>
 
-                     </div>
-                  {/*)*/}
-              {/*}*/}
-                {/*)}*/}
+                </div>
             </div>
           )
         })}

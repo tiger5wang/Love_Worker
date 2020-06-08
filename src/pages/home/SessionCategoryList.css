@@ -1,0 +1,5 @@
+.title {
+  white-space: nowrap;
+  text-overflow: clip;
+  background-color: white;
+}

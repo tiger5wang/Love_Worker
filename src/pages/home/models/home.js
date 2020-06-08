@@ -1,4 +1,4 @@
-import { directorList } from '../../../services/home';
+import { createUserUid } from '../../../services/home';
 
 export default {
   namespace: 'home',
@@ -7,16 +7,13 @@ export default {
   },
   effects: {
     * getDirectorList({ payload, callback }, { call, put }) {
-      const response = yield call(directorList, payload);
-      if (response && response.code === 200) {
-        callback && callback(response.data);
-        yield put({
-          type: 'directorList',
-          payload: response.data,
-        });
-      } else {
-
+      const response = yield call(createUserUid, payload);
+      console.log(JSON.stringify(payload))
+        console.log(JSON.stringify(response))
+       if (response && response.code === 200) {
+        callback && callback(response);
       }
+
     },
   },
 

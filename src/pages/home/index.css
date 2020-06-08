@@ -1,5 +1,5 @@
 .header {
-  background-color: #ff790c;
+  background-color: #ec1a5b;
   padding: 10px;
 }
 .headerFont {
@@ -11,8 +11,14 @@
 .firstDic {
   display: flex;
   color: red;
-  font-size: 1.2rem;
+  font-size: 14px;
   margin: 8px 1.5%;
+
+
+      font-family:Arial, Helvetica, sans-serif;
+
+      line-height:15px;
+      text-transform:uppercase
 
 }
 .itemContain {
@@ -28,13 +34,28 @@
 .btn {
   /*margin-top: 10px;*/
   font-size: 0.9em;
-  background-color: rgba(0,0,0,0);
-  border: 1px solid #3c4146;
-  border-radius: 3px;
+  background-color: #eeeeee;
+  border: 1px solid #8a8a8a;
+  border-radius: 20px;
   outline-width: 0;
   padding: 5px 10px;
-  width: 30%;
+  width: 16%;
   margin: 1.5%;
+  color: #000000;
+}
+
+
+.btn2 {
+  /*margin-top: 10px;*/
+  font-size: 0.9em;
+  background-color: #eeeeee;
+  border: 1px solid #8a8a8a;
+  border-radius: 20px;
+  outline-width: 0;
+  padding: 5px 10px;
+  width: 18%;
+  margin: 1.5%;
+  color: #000000;
 }
 
 .goback {
@@ -83,3 +104,112 @@
   background: url(../../assets/middle.png) no-repeat center 0;
   background-size: 20px 20px;
 }
+
+.liao {
+   height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/liaotian.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+
+.liao_selected {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/liao_select.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+
+.wordSelectIcon {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/img/fenleihong.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+
+.shexiangtouIcon {
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  background: url(../../assets/img/fenlelhei.png) no-repeat center 0;
+  background-size: 20px 20px;
+}
+
+.ul {
+  margin: 100px;
+  background-color: #8a8a8a;
+  overflow: hidden;
+  height: 26px;
+}
+
+.li {
+  height: 22px;
+  line-height: 22px;
+  font-size: 12px;
+}
+
+
+
+
+
+
+.box {
+            width: 300px;
+            margin: 0 auto;
+            border: 1px solid #ff6700;
+            overflow: hidden;
+}
+.animate {
+            padding-left: 20px;
+            line-height: 23px;
+            font-size: 12px;
+            color: #000;
+            display: inline-block;
+            white-space: nowrap;
+            animation: 10s wordsLoop linear infinite normal;
+}
+@keyframes wordsLoop {
+     0% {
+             transform: translateX(200px);
+             -webkit-transform: translateX(200px);
+      }
+     100% {
+            transform: translateX(-100%);
+            -webkit-transform: translateX(-100%);
+      }
+}
+@-webkit-keyframes wordsLoop {
+     0% {
+          transform: translateX(200px);
+          -webkit-transform: translateX(200px);
+     }
+     100% {
+          transform: translateX(-100%);
+          -webkit-transform: translateX(-100%);
+     }
+}
+
+
+
+
+.mydrawer {
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mydrawer .am-drawer-sidebar {
+  background-color: #fff;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mydrawer .am-drawer-sidebar .am-list {
+  width: 300px;
+  padding: 0;
+}
+
+
+
+
+

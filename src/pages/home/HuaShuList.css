@@ -1,5 +1,5 @@
 .header {
-  background-color: indianred;
+  background-color: #ec1a5b;
   padding: 10px;
 }
 .headerFont {
@@ -26,6 +26,19 @@
   color: red;
   text-align: center;
   margin-left: 5px;
+}
+.itemContain {
+  width: 100%;
+  display: inline-block;
+  justify-content: start;
+  background-color: #fff;
+  padding: 10px 0;
+}
+.sizeStyle {
+  overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 300px;
 }
 .content {
   text-align: left;

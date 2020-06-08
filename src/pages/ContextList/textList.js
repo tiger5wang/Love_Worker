@@ -3,7 +3,7 @@ import {connect} from 'dva'
 import {sk_user_token} from '@/config/StorageKeys'
 import styles from './textListCSS.css';
 
-import { ListView } from 'antd-mobile';
+import { Flex, Icon, ListView } from 'antd-mobile';
 import { Toast } from 'antd-mobile/lib/index';
 import router from 'umi/router';
 
@@ -25,8 +25,20 @@ class textList extends Component {
   componentDidMount(){
      this.userInfo = JSON.parse(localStorage.getItem('MSUser'));
      this.token = localStorage.getItem(sk_user_token);
+     this.getWebHeader()
     this.get_dataList()
   }
+
+
+
+    getWebHeader = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'HeaderDataContent/getWebHeader',
+      payload: {},
+    });
+  };
+
 
 
   get_dataList = () =>{
@@ -58,13 +70,21 @@ class textList extends Component {
     }
   };
 
+  ContextRouter = () => {
+    router.push({
+      pathname: '/',
+    });
+  };
+
   render() {
      const {data} = this.state;
 
     return(
       <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}>
         <div className={styles.header}>
-          <span className={styles.headerFont}>恋爱话术</span>
+          <Flex justify='start'>
+            <Icon onClick={() => this.ContextRouter()} color='#fff' type="left" size='lg'/><span className={styles.headerFont}>{this.props.HeaderDataContent.name}</span>
+          </Flex>
         </div>
 
         {data && data.length > 0 && data.map((item, index) => {
@@ -90,7 +110,8 @@ class textList extends Component {
   }
 }
 
-export default connect(({PostDataList}) => ({
-  PostDataList
+export default connect(({PostDataList, HeaderDataContent}) => ({
+  PostDataList,
+  HeaderDataContent
 }))(textList)
 

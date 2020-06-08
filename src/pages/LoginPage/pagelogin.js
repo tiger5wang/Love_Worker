@@ -1,10 +1,6 @@
-/*
-__author__ = 'YongCong Wu'
-@Time    : 2019/8/9 10:09
-@Email   :  : 1922878025@qq.com
-*/
+
 import React,{Component} from 'react';
-import { Flex, List, Icon, Toast } from 'antd-mobile';
+import { Flex, List, Icon, Toast, Button } from 'antd-mobile';
 import styles from '@/pages/home/index.css';
 import { connect } from 'dva';
 import router from 'umi/router';
@@ -108,6 +104,13 @@ class pagelogin extends Component {
     })
   }
 
+
+    louot=()=>{
+     router.push({
+        pathname: '/LoginPage/register',
+      });
+  }
+
   render() {
 
     const{username, userType, create_time, kefu, huiyuan} = this.state;
@@ -116,15 +119,23 @@ class pagelogin extends Component {
       <div style={{backgroundColor:'#fff',position: 'fixed', height: '100%', width: '100%', top: 0}}>
 
         <div className={styles.header}>
-          <Flex justify='start'>
-            <Icon onClick={() => this.returnHome()} color='#fff' type="left" size='lg'/>
-            <span className={styles.headerFont}>恋爱话术</span>
+          <Flex justify='between'>
+
+            <Flex>
+              <Icon onClick={() => this.returnHome()} color='#fff' type="left" size='lg'/>
+              <span className={styles.headerFont}>2020加油站</span>
+            </Flex>
+
+
+
+            <Button inline size="small" onClick={() => this.louot()}>退出登录</Button>
+
           </Flex>
 
         </div>
 
-        <Flex justify='center' style={{marginTop: 100}}>
-          <img style={{width:100, height:100, borderRadius:'50%'}} src="https://i.loli.net/2019/08/10/RPMitd6SIVe8nfw.jpg"  alt="头像" />
+        <Flex justify='center' style={{marginTop: 10}}>
+          <img style={{width:50, height:50, borderRadius:'30%'}} src="http://i2.tiimg.com/702780/87a35efc5814c7de.png"  alt="头像" />
         </Flex>
          <Flex justify='center'>
           <h3>会员级别: {userType}</h3>
@@ -135,7 +146,7 @@ class pagelogin extends Component {
         <Flex justify='center'>
           <h3>注册时间: {create_time}</h3>
         </Flex>
-        <Flex justify='start' style={{marginTop: 80}}>
+        <Flex justify='start' style={{marginTop: 10}}>
           <h3>会员介绍:</h3>
         </Flex>
         <Flex justify='start'>
@@ -143,7 +154,7 @@ class pagelogin extends Component {
             {huiyuan}
           </p>
         </Flex>
-         <Flex justify='start' style={{marginTop: 15}}>
+         <Flex justify='start' style={{marginTop: 8}}>
           <h3>联系客服:</h3>
         </Flex>
          <Flex justify='start'>
@@ -151,6 +162,7 @@ class pagelogin extends Component {
             {kefu}
           </p>
         </Flex>
+
       </div>
     );
   }

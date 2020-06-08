@@ -55,109 +55,117 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 async function request(url, options) {
-  const defaultOptions = {
-    credentials: 'include',
-  };
-  const newOptions = { ...defaultOptions, ...options };
+  // const defaultOptions = {
+  //   credentials: 'include',
+  // };
+  // const newOptions = {  ...options };
   // body 添加token
-  if (newOptions.body) {
-    newOptions.body.token =  await Storage.get(sk_user_token);
-  } else {
-    newOptions.body = {
-      token: await Storage.get(sk_user_token),
-    };
-  }
-  if (
-    newOptions.method === 'POST' ||
-    newOptions.method === 'PUT' ||
-    newOptions.method === 'DELETE'
-  ) {
-    if (newOptions.contentType === 'application/json') {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        ...newOptions.headers,
-      };
-      newOptions.body = JSON.stringify(newOptions.body);
-    } else if (newOptions.contentType === 'formData') {
-      newOptions.headers = {
-        Accept: 'application/json',
-        ...newOptions.headers,
-      };
-    } else {
-      newOptions.headers = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json; charset=utf-8',
-        ...newOptions.headers,
-      };
-      newOptions.data = { ...newOptions.body };
-    }
-  } else if (newOptions.method === 'GET') {
-    newOptions.params = { ...newOptions.body };
-    // new_url = url + '?' + setUrlEncoded(newOptions.body)
-    delete newOptions.body
-  }
+  // if (newOptions.body) {
+  //   newOptions.body.token =  await Storage.get(sk_user_token);
+  // } else {
+  //   newOptions.body = {
+  //     token: await Storage.get(sk_user_token),
+  //   };
+  // }
+  // if (
+  //   newOptions.method === 'POST' ||
+  //   newOptions.method === 'PUT' ||
+  //   newOptions.method === 'DELETE'
+  // ) {
+  //   if (newOptions.contentType === 'application/json') {
+  //     newOptions.headers = {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //       ...newOptions.headers,
+  //     };
+  //     newOptions.body = JSON.stringify(newOptions.body);
+  //   } else if (newOptions.contentType === 'formData') {
+  //     newOptions.headers = {
+  //       // Accept: 'application/json',
+  //       ...newOptions.headers,
+  //     };
+  //   } else {
+  //     newOptions.headers = {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json; charset=utf-8',
+  //       ...newOptions.headers,
+  //     };
+  //     newOptions.data = { ...newOptions.body };
+  //   }
+  // } else if (newOptions.method === 'GET') {
+  //   newOptions.params = { ...newOptions.body };
+  //   // new_url = url + '?' + setUrlEncoded(newOptions.body)
+  //   delete newOptions.body
+  // }
   // console.log('options', newOptions)
-  return axios
-    .create()
-    .request({
-      url: UrlConfig.base_url + url,
-      timeout: 30000,
-      ...newOptions,
-    })
-    .then((res) => {
-      return checkStatus(res)
-    })
-    .catch(error => {
-      const { response } = error;
 
-      if ('stack' in error && 'message' in error) {
-        const { message } = error;
-        if (!message.indexOf('timeout')) {
-          Toast.fail('请求超时, 请稍后再试')
-        } else if(!message.indexOf('Network')){
-          Toast.fail('暂无网络，请检查网络')
-        } else {
-          const { status } = response;
-
-          if (status === 401) {
-            console.log('401 auto logout')
-            // NavigatorHelper.navigation.navigate('Auth')
-            Toast.info('授权已过期, 请重新登录')
-
-          } else {
-            // Alert.alert(`请求错误`, status ? codeMessage[status] : '')
-            Toast.fail(status ? codeMessage[status] : '请求错误', 3)
-          }
-          // else if (status === 403) {
-          //
-          //     // router.push('/exception/403');
-          // } else if (status <= 504 && status >= 500) {
-          //     // router.push('/exception/500');
-          // } else if (status >= 404 && status < 422) {
-          //     // router.push('/exception/404');
-          // }
-          return {
-            message: `请求错误`,
-            description: codeMessage[status],
-            data: null,
-            code: status
-          };
-        }
-      }
-      return {
-        message: `请求错误`,
-        description: error.message,
-        data: null,
-        code: 404
-      };
-    });
-
-  // return fetch(new_url, newOptions)
-  //   .then(checkStatus)
-  //   .then((response) => {
-  //     return response.json();
+  // console.log('**********************', newOptions)
+  // return axios
+  //   .create()
+  //   .request({
+  //     url: UrlConfig.base_url + url,
+  //     timeout: 30000,
+  //     ...newOptions,
+  //   })
+  //   .then((res) => {
+  //     return checkStatus(res)
+  //   })
+  //   .catch(error => {
+  //     const { response } = error;
+  //
+  //     if ('stack' in error && 'message' in error) {
+  //       const { message } = error;
+  //       if (!message.indexOf('timeout')) {
+  //         Toast.fail('请求超时, 请稍后再试')
+  //       } else if(!message.indexOf('Network')){
+  //         Toast.fail('暂无网络，请检查网络')
+  //       } else {
+  //         const { status } = response;
+  //
+  //         if (status === 401) {
+  //           console.log('401 auto logout')
+  //           // NavigatorHelper.navigation.navigate('Auth')
+  //           Toast.info('授权已过期, 请重新登录')
+  //
+  //         } else {
+  //           // Alert.alert(`请求错误`, status ? codeMessage[status] : '')
+  //           Toast.fail(status ? codeMessage[status] : '请求错误', 3)
+  //         }
+  //         // else if (status === 403) {
+  //         //
+  //         //     // router.push('/exception/403');
+  //         // } else if (status <= 504 && status >= 500) {
+  //         //     // router.push('/exception/500');
+  //         // } else if (status >= 404 && status < 422) {
+  //         //     // router.push('/exception/404');
+  //         // }
+  //         return {
+  //           message: `请求错误`,
+  //           description: codeMessage[status],
+  //           data: null,
+  //           code: status
+  //         };
+  //       }
+  //     }
+  //     return {
+  //       message: `请求错误`,
+  //       description: error.message,
+  //       data: null,
+  //       code: 404
+  //     };
   //   });
+
+  return  fetch(`${UrlConfig.base_url}${url}`, {
+            method: 'POST',
+            // headers: {
+            //   'Content-Type': 'application/x-www-form-urlencoded',
+            // },
+            body: options.body,
+          }).then(function(res) {
+            // console.log('1111111111111111', JSON.stringify(res))
+            return res.json();
+          })
+
 }
 
 /**
@@ -223,6 +231,7 @@ proxyRequest.get = (url, data, options, showError) => {
 };
 
 proxyRequest.post = (url, data, options, showError) => {
+  console.log(data)
   options = options || {};
   options.body = data || {};
   options.method = 'POST';

@@ -8,7 +8,7 @@ export default {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: '恋爱话术',
+      title: '2020加油站',
       dll: true,
       
       routes: {

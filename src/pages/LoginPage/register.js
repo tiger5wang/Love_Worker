@@ -1,15 +1,9 @@
-/*
-__author__ = 'YongCong Wu'
-@Time    : 2019/8/8 16:54
-@Email   :  : 1922878025@qq.com
-*/
 import React, {Component} from 'react';
-import { Flex, InputItem, List, Tabs } from 'antd-mobile';
+import { Flex, WingBlank} from 'antd-mobile';
 import { createForm } from 'rc-form';
 import {connect} from 'dva'
-import styles from '@/pages/home/index.css';
-import RegisterLogin from './registerlofin'
-import LoginUser from './loginuser'
+import Styles from './register.css'
+import ModifyImg from  '../../assets/img/emptyCart.jpg'
 
 
 class register extends Component {
@@ -20,37 +14,18 @@ class register extends Component {
 
   render() {
 
-    const { getFieldProps } = this.props.form;
-    const tabs = [
-      { title: '注册', sub: '1' },
-      { title: '登录', sub: '2' },
-    ];
-
-
-
-
     return (
-      <div style={{backgroundColor:'#fff', height:'100%'}}>
-        <div className={styles.header}>
-          <span className={styles.headerFont}>恋爱话术</span>
-        </div>
-
-        <Tabs tabs={tabs}
-              initialPage={1}
-              onChange={(tab, index) => {
-                console.log('onChange', index, tab);
-              }}
-              onTabClick={(tab, index) => {
-                console.log('onTabClick', index, tab);
-              }}
-        >
-          <RegisterLogin/>
-          <LoginUser/>
-
-        </Tabs>
-
-
+      <div className={Styles.box}>
+        <WingBlank size="sm">
+          <Flex justify='center' style={{marginTop:'50%'}}>
+            <img alt=" " src={ModifyImg}/>
+          </Flex>
+          <Flex justify='center'>
+            <span>空空如也  <a href='#' style={{ color: 'red' }}>随便逛逛</a></span>
+          </Flex>
+        </WingBlank>
       </div>
+
     );
   }
 }

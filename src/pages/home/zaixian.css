@@ -1,0 +1,8 @@
+.fixed{ position:fixed; left:0px; bottom:0px; width:100%; height:50px; background-color:#ffffff; z-index:9999;}
+
+.headerFont {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", SimSun, sans-serif;
+}

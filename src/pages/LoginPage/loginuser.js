@@ -1,8 +1,4 @@
-/*
-__author__ = 'YongCong Wu'
-@Time    : 2019/8/8 20:14
-@Email   :  : 1922878025@qq.com
-*/
+
 import React, {Component} from 'react';
 import { Button, Flex, InputItem, List, Toast } from 'antd-mobile';
 import { connect } from 'dva';
@@ -35,7 +31,7 @@ class loginuser extends Component {
             },
          });
         }else{
-           Toast.offline(response.message);
+           Toast.offline('账号或密码错误,请重新输入！');
         }
       },
     });
@@ -69,6 +65,10 @@ class loginuser extends Component {
 
         <Flex style={{ marginTop: 70 }} justify='center'>
           <Button type="primary" style={{ width: 100 }} onClick={() => this.subMitLogin()}>登录</Button>
+        </Flex>
+
+        <Flex justify='center' style={{marginTop: 50}}>
+          版权:【最终解释权归本人所有,此系统仅供学习参考，请勿用于非法用途】
         </Flex>
 
       </div>

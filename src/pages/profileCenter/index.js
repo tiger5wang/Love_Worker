@@ -1,10 +1,6 @@
-/*
-__author__ = 'YongCong Wu'
-@Time    : 2019/8/9 10:09
-@Email   :  : 1922878025@qq.com
-*/
+
 import React,{Component} from 'react';
-import {Flex, List, Icon} from 'antd-mobile';
+import { Flex, List, Icon, Toast, Button } from 'antd-mobile';
 import styles from '@/pages/home/index.css';
 import { connect } from 'dva';
 import router from 'umi/router';
@@ -22,11 +18,17 @@ class ProfileCenter extends Component {
       create_time:'',
       userType: '',
       token:'',
-      id: 0
+      id: 0,
+      kefu:'',
+      huiyuan:''
+
     };
   }
 
   componentDidMount(){
+    this.getWebHeader()
+    this.get_kefu()
+    this.hyJS()
     this.getStorage()
 
     const{dispatch, location} = this.props;
@@ -72,25 +74,78 @@ class ProfileCenter extends Component {
     });
   };
 
+   getWebHeader = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'HeaderDataLogin/getWebHeader',
+      payload: {},
+    });
+  };
+
+
+  hyJS = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'SettingsInfo/postSettingsInfo',
+      payload: {},
+      callback: response => {
+        if (response.code === 200) {
+          this.setState({
+            huiyuan: response.hy,
+          });
+        } else {
+          Toast.offline(response.message);
+        }
+      },
+    });
+  };
+
+  get_kefu = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'SettingsInfo/getSettingsInfo',
+      payload: {},
+      callback: response => {
+        if (response.code === 200) {
+          this.setState({
+            kefu: response.kf,
+          });
+        } else {
+          Toast.offline(response.message);
+        }
+      },
+    });
+  };
+
+
+  louot=()=>{
+     router.push({
+        pathname: '/LoginPage/register',
+      });
+  }
+
   render() {
 
-    const{username, userType, create_time} = this.state;
+    const{username, userType, create_time, kefu,huiyuan } = this.state;
 
     return (
-      <div style={{backgroundColor:'#fff',position: 'fixed', height: '100%', width: '100%', top: 0}}>
+            <div style={{backgroundColor:'#fff',position: 'fixed', height: '100%', width: '100%', top: 0}}>
 
         <div className={styles.header}>
-          <Flex justify='start'>
-            <Icon onClick={() => this.returnHome()} color='#fff' type="left" size='lg'/>
-            <span className={styles.headerFont}>恋爱话术</span>
-          </Flex>
+          <Flex justify='between'>
+            <Flex>
+               <Icon onClick={() => this.returnHome()} color='#fff' type="left" size='lg'/>
+            <span className={styles.headerFont}>{this.props.HeaderDataLogin.name}</span>
+            </Flex>
+            <Button inline size="small" onClick={() => this.louot()}>退出登录</Button>
+            </Flex>
 
         </div>
 
-        <Flex justify='center' style={{marginTop: 100}}>
-          <img style={{width:100, height:100, borderRadius:'50%'}} src="https://i.loli.net/2019/08/10/RPMitd6SIVe8nfw.jpg"  alt="头像" />
+        <Flex justify='center' style={{marginTop: 10}}>
+          <img style={{width:50, height:50, borderRadius:'30%'}} src="http://i2.tiimg.com/702780/87a35efc5814c7de.png"  alt="头像" />
         </Flex>
-        <Flex justify='center'>
+         <Flex justify='center'>
           <h3>会员级别: {userType}</h3>
         </Flex>
         <Flex justify='center'>
@@ -99,27 +154,32 @@ class ProfileCenter extends Component {
         <Flex justify='center'>
           <h3>注册时间: {create_time}</h3>
         </Flex>
+        <Flex justify='start' style={{marginTop: 10}}>
+          <h3>会员介绍:</h3>
+        </Flex>
+        <Flex justify='start'>
+          <p>
+            {huiyuan}
+          </p>
+        </Flex>
+         <Flex justify='start' style={{marginTop: 8}}>
+          <h3>联系客服:</h3>
+        </Flex>
+         <Flex justify='start'>
+          <p>
+            {kefu}
+          </p>
+        </Flex>
 
-        <List  className="my-list" style={{marginTop: 80}}>
-          <Item arrow="horizontal" multipleLine onClick={() => {
-          }}>
-            会员介绍
-          </Item>
-        </List>
-        <List className="my-list">
-          <Item arrow="horizontal" multipleLine onClick={() => {
-          }}>
-            联系客服
-          </Item>
-        </List>
       </div>
     );
   }
 }
 
 
-export default connect(({profileCenter}) => ({
-  profileCenter
+export default connect(({profileCenter, HeaderDataLogin}) => ({
+  profileCenter,
+  HeaderDataLogin
 }))(ProfileCenter)
 
 

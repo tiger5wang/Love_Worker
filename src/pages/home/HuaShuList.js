@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'dva';
-import {Icon, Flex, } from 'antd-mobile'
+import {Icon, Flex,Button } from 'antd-mobile'
 import router from 'umi/router';
 import styles from './HuaShuList.css';
+import { sk_user_token } from '@/config/StorageKeys';
 
 class HuaShuList extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class HuaShuList extends Component {
   }
 
   componentDidMount() {
-    this.searchDataList()
+    this.searchDataList();
   }
 
   returnPage = () => {
@@ -48,7 +49,8 @@ class HuaShuList extends Component {
 
   render() {
     const {searchData} = this.props;
-    const{data} = searchData;
+
+
 
 
     return (
@@ -63,12 +65,16 @@ class HuaShuList extends Component {
           </Flex>
         </div>
         {searchData && searchData.length > 0 && searchData.map((item, index) => {
-          // let context = item.content.split('^');
-          // let context = ''
           return(
-            <div className={styles.content}>
+            <div>
+              <Flex justify='between'>
+                <p className={styles.sizeStyle}>{item.content.replace('^', '').replace('^', '')}</p>
+                <Button size='small' style={{ backgroundColor: '#ec1a5b' }}
+                        onClick={() => this.listDataInfo(item.id)}>查看</Button>
 
-                     <p className={styles.sizeStyle} onClick={() => this.listDataInfo(item.id)}>{item.content.replace('^', "").replace("^", "")}</p>
+              </Flex>
+
+
 
 
             </div>
