@@ -90,7 +90,7 @@ class ZaiXian extends Component {
 
     return (
       <div style={{ backgroundColor: '#efefef'}}>
-        <Grid columnNum={5} data={data} hasLine={false}/>
+        <Grid columnNum={5} data={data} hasLine={false} onClick={(item) => this.saveBD(item.text)}/>
         <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.saveBD(value)}/>
 
         <div className={styles.searchbox}>

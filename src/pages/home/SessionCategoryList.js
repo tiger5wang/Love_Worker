@@ -79,7 +79,7 @@ class SessionCategoryList extends Component {
 
   componentDidMount() {
     const url_c = window.localStorage.getItem('c');
-    console.log('url_c', url_c, getPageQuery().c )
+    // console.log('url_c', url_c, getPageQuery().c )
     this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
     this.setask();
   }
@@ -112,7 +112,7 @@ class SessionCategoryList extends Component {
           .then(function(json) {
             // console.log(JSON.stringify(json))
             if (json.code == '0') {
-              console.log('232323233-----正确');
+              // console.log('232323233-----正确');
             }
           })
           .catch(error => {console.log(error);Toast.fail(error)});
@@ -169,14 +169,26 @@ class SessionCategoryList extends Component {
       })
   };
 
+  justifyPay = (data) => {
+    let formdata = new FormData();
+    formdata.append('id', this.pathC);
+    formdata.append('sid', data.id);
 
-  gotoWordsList = (Id, Name) => {
+    proxyRequest.post('/Api/getdetails', formdata)
+      .then(result => {
+        console.log('000000000000', result)
+      })
+      .catch(error => {
+        console.log('error', error);
+        Toast.fail(error)
+      })
+  }
+
+  goToDetail = (data) => {
       router.push({
-        pathname: '/wordsList',
+        pathname: '/ContextList/contextInfo',
         query: {
-          id: Id,
-          name: Name,
-          token: this.token
+
         },
     })
     // }
@@ -194,7 +206,7 @@ class SessionCategoryList extends Component {
 
   //上拉加载
   onEndReached = () => {
-    console.log('+++++++++++++++++++++++++++++', this.state.loadEnd)
+    // console.log('+++++++++++++++++++++++++++++', this.state.loadEnd)
     if(!this.state.loadEnd) {
       this.page += 1;
       this.setState({upLoading: true});
@@ -220,7 +232,7 @@ class SessionCategoryList extends Component {
                    style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
                 <a
                   style={{ width: '100%', height: '100%'}}
-                  onClick={() => console.log('click')}
+                  onClick={() => this.justifyPay(data)}
                 >
                   <img
                     src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
