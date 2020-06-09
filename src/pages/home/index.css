@@ -13,20 +13,16 @@
   color: red;
   font-size: 14px;
   margin: 8px 1.5%;
-
-
-      font-family:Arial, Helvetica, sans-serif;
-
-      line-height:15px;
-      text-transform:uppercase
-
+  font-family:Arial, Helvetica, sans-serif;
+  line-height:15px;
+  text-transform:uppercase
 }
-.itemContain {
+
+.search {
   width: 100%;
-  display: inline-block;
-  justify-content: start;
-  background-color: #fff;
-  padding: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  /*padding: 10px 0;*/
 }
 .link {
   text-decoration: none;
@@ -62,152 +58,13 @@
   display: inline-block;
 }
 
-.icon_selected {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/account_selected.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-.icon {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/account.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-.words_selected {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/words_selected.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-.words {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/words.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-.middle_selected {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/middle_selected.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-.middle {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/middle.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-
-.liao {
-   height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/liaotian.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-
-.liao_selected {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/liao_select.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-
-.wordSelectIcon {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/img/fenleihong.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-
-.shexiangtouIcon {
-  height: 20px;
-  width: 20px;
-  background-color: red;
-  background: url(../../assets/img/fenlelhei.png) no-repeat center 0;
-  background-size: 20px 20px;
-}
-
-.ul {
-  margin: 100px;
-  background-color: #8a8a8a;
-  overflow: hidden;
-  height: 26px;
-}
-
-.li {
-  height: 22px;
-  line-height: 22px;
-  font-size: 12px;
+.searchbox {
+  background-color: #ffffff;
+  border-radius: 8px 8px 0 0;
+  height: 100%;
 }
 
 
-
-
-
-
-.box {
-            width: 300px;
-            margin: 0 auto;
-            border: 1px solid #ff6700;
-            overflow: hidden;
-}
-.animate {
-            padding-left: 20px;
-            line-height: 23px;
-            font-size: 12px;
-            color: #000;
-            display: inline-block;
-            white-space: nowrap;
-            animation: 10s wordsLoop linear infinite normal;
-}
-@keyframes wordsLoop {
-     0% {
-             transform: translateX(200px);
-             -webkit-transform: translateX(200px);
-      }
-     100% {
-            transform: translateX(-100%);
-            -webkit-transform: translateX(-100%);
-      }
-}
-@-webkit-keyframes wordsLoop {
-     0% {
-          transform: translateX(200px);
-          -webkit-transform: translateX(200px);
-     }
-     100% {
-          transform: translateX(-100%);
-          -webkit-transform: translateX(-100%);
-     }
-}
-
-
-
-
-.mydrawer {
-  position: relative;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.mydrawer .am-drawer-sidebar {
-  background-color: #fff;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.mydrawer .am-drawer-sidebar .am-list {
-  width: 300px;
-  padding: 0;
-}
 
 
 

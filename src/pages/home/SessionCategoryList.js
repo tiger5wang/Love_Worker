@@ -1,6 +1,18 @@
 import React, {Component} from 'react';
 import {connect} from 'dva'
-import { WingBlank, WhiteSpace, SearchBar, Carousel, Grid,NoticeBar, Toast, Flex } from 'antd-mobile';
+import {
+  WingBlank,
+  WhiteSpace,
+  SearchBar,
+  Carousel,
+  Grid,
+  NoticeBar,
+  Toast,
+  Flex,
+  Icon,
+  ListView,
+  PullToRefresh
+} from 'antd-mobile';
 import styles from './SessionCategoryList.css';
 import { createForm } from 'rc-form';
 import router from 'umi/router';
@@ -52,49 +64,26 @@ class SessionCategoryList extends Component {
       selected: '',
       data: ['1', '2'],
       imgHeight: 176,
-    }
+      list: [],
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1[0] !== r2[0]
+      }),
+      upLoading : false,
+      pullLoading : false,
+      loadEnd: false,
+    };
+    this.data = [];
+    this.page = 0;
   }
 
 
   componentDidMount() {
-    console.log('------------------------------')
-    const { dispatch } = this.props;
-    const url_c = window.localStorage.getItem('c')
-    const user = window.localStorage.getItem('username')
-    if (getPageQuery().c || url_c != '' && url_c != null) {
-      localStorage.setItem('c', getPageQuery().c);
-      if (user) {
-        let formdata = new FormData();
-        formdata.append('id', url_c);
-
-        fetch(`${UrlConfig.base_url}/Api/setask`, {
-          method: 'POST',
-          // headers: {
-          //   'Content-Type': 'application/x-www-form-urlencoded',
-          // },
-          body: formdata,
-        }).then(function(res) {
-          console.log('1111111111111111', JSON.stringify(res))
-          return res.json();
-        }).then(function(json) {
-          console.log(JSON.stringify(json))
-          if (json.code == '0') {
-            console.log('232323233-----正确');
-          }
-        })
-      } else {
-        console.log(this.Randomuuid());
-        localStorage.setItem('username', this.Randomuuid() + this.Randomuuid() + this.Randomuuid() + this.Randomuuid());
-      }
-      this.setCarousel()
-
-    } else {
-      console.log('=====================')
-      window.location.href = 'https://im.qq.com/'
-    }
-    this.getIndex()
-    console.log('window.innerWidth', window.innerWidth)
+    const url_c = window.localStorage.getItem('c');
+    console.log('url_c', url_c, getPageQuery().c )
+    this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
+    this.setask();
   }
+
 
   // 随机值
   Randomuuid=()=> {
@@ -108,29 +97,77 @@ class SessionCategoryList extends Component {
     })
   };
 
+  setask = () => {
+    const user = window.localStorage.getItem('username');
+    if (this.pathC) {
+      this.getIndex();
+      this.setCarousel();
+      localStorage.setItem('c', this.pathC);
+
+      if (user) {
+        let formdata = new FormData();
+        formdata.append('id', this.pathC);
+
+        proxyRequest.post('/Api/setask', formdata)
+          .then(function(json) {
+            // console.log(JSON.stringify(json))
+            if (json.code == '0') {
+              console.log('232323233-----正确');
+            }
+          })
+          .catch(error => {console.log(error);Toast.fail(error)});
+      } else {
+        // console.log(this.Randomuuid());
+        localStorage.setItem('username', this.Randomuuid() + this.Randomuuid() + this.Randomuuid() + this.Randomuuid());
+      }
+    } else {
+      window.location.href = 'https://im.qq.com/'
+    }
+  };
+
   // http://www.verming.com/Api/getindex
   getIndex = () => {
+    // console.log('-------------page', this.page)
     let formdata = new FormData();
-    formdata.append('id', 6);
+    formdata.append('id', this.pathC);
+    formdata.append('page', this.page);
 
     proxyRequest.post('/Api/getindex', formdata)
       .then(result => {
-        console.log('0000000000000000000', result)
+        console.log('/Api/getindex', result)
         const {code, data, msg} = result;
         if(code === 0) {
+          if(!data || data.length <= 0) {
+            this.setState({
+              loadEnd: true
+            })
+          }
+          let arr = [];
+          for(let i=0; i<data.length; i++) {
+            arr.push(data[i]);
+            if(i % 2 === 1) {
+              this.data.push(arr);
+              arr = []
+            }
+          }
           this.setState({
-            dataList: data
-          }, () => console.log('this.state.dataList', this.state.dataList))
+            list: this.data,
+            upLoading : false,
+            pullLoading : false
+          })
         } else {
-          Toast.info(msg)
+          Toast.info(msg);
+          this.setState({
+            upLoading : false,
+            pullLoading : false
+          })
         }
       })
       .catch(error => {
-        console.log('error', error)
+        console.log('error', error);
         Toast.fail(error)
       })
-  }
-
+  };
 
 
   gotoWordsList = (Id, Name) => {
@@ -155,21 +192,69 @@ class SessionCategoryList extends Component {
     });
   };
 
+  //上拉加载
+  onEndReached = () => {
+    console.log('+++++++++++++++++++++++++++++', this.state.loadEnd)
+    if(!this.state.loadEnd) {
+      this.page += 1;
+      this.setState({upLoading: true});
+      this.getIndex();
+    }
+  }
+//下拉刷新
+  onRefresh = () => {
+    this.setState({ pullLoading: true });
+    this.page = 0;
+    this.data = [];
+    this.getIndex();
+    //接口请求第一页数据,完成后将pullLoading设为false
+  }
+//获取item进行展示
+  renderRow = (data, i) => {
+    // console.log(data, i)
+    return (
+        <Flex wrap={'wrap'} style={{width: window.innerWidth - 30}}>
+          {data.length > 0 && data.map((item, index) => {
+            return (
+              <div key={item.id}
+                   style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
+                <a
+                  style={{ width: '100%', height: '100%'}}
+                  onClick={() => console.log('click')}
+                >
+                  <img
+                    src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
+                    alt={item.name}
+                    style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
+                    onLoad={() => {
+                      window.dispatchEvent(new Event('resize'));
+                      // this.setState({ imgHeight: 'auto' });
+                    }}
+                    onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
+                  />
+                  <WhiteSpace size={'sm'}/>
+                  <p className={styles.title}>{item.name}</p>
+                  <WhiteSpace size={'sm'}/>
+                  <p style={{color: 'red'}}>{item.cs}人付款</p>
+                </a>
+              </div>
+            )
+          })}
+        </Flex>
+    )
+  }
 
 
   render() {
-
+    // console.log('*************************', ReactDOM.findDOMNode(this.lv).parentNode.offsetTop)
     const data = listdata.map(( i) => ({
       icon: `${i.imgPath}`,
       text: `${i.name}`,
     }));
 
-
+    const { list, dataSource, upLoading, pullLoading } = this.state;
     return(
-      <div style={{ backgroundColor: 'white', height: '100%', textAlign: 'center' }}
-           onScroll={() => console.log('11111111111111111111111')}
-           onScrollCapture={() => console.log('2222222222222222222222222')}
-      >
+      <div className={styles.container}>
         <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
 
         {/*轮播图*/}
@@ -198,52 +283,46 @@ class SessionCategoryList extends Component {
               </a>
             ))}
             </Carousel>
-
          </WingBlank>
         <NoticeBar marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}>
           如 果 付 款 后 没 有 跳 转 播 放 页 面 请 联 系 客 服.855779585955
         </NoticeBar>
 
-        {/*内容部分*/}
+        {/*分类部分*/}
         <Grid  columnNum={6} data={data} hasLine={false}/>
 
-
         <WingBlank>
-          {this.state.dataList.length > 0 ?
-            <Flex wrap={'wrap'}>
-              {this.state.dataList.map((item, index) => {
-
-                return (
-                  <div key={item.id}
-                       style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
-                    <a
-                      style={{ width: '100%', height: '100%'}}
-                      onClick={() => console.log('click')}
-                    >
-                      <img
-                        src={this.state[`preloadImg${index}`] ? preloadImg: item.image }
-                        alt={item.name}
-                        style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
-                        onLoad={() => {
-                          window.dispatchEvent(new Event('resize'));
-                          // this.setState({ imgHeight: 'auto' });
-                        }}
-                        onError={() => {this.setState({[`preloadImg${index}`]: true})}}
-                      />
-                      <WhiteSpace size={'sm'}/>
-                      <p className={styles.title}>{item.name}</p>
-                      <WhiteSpace size={'sm'}/>
-                      <p style={{color: 'red'}}>{item.cs}人付款</p>
-                    </a>
-                  </div>
-                )
-              })}
-            </Flex>
-            : null}
+          {
+            list && list.length ?
+              <ListView
+                dataSource={dataSource.cloneWithRows(list)}
+                renderRow={(rowData, id1, i) => this.renderRow(rowData, i)}
+                initialListSize={5}
+                pageSize={5}
+                renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
+                  {upLoading ? <Icon type="loading" />: null}
+                </div>)}
+                onEndReached={() => this.onEndReached()}
+                onEndReachedThreshold={50}
+                // useBodyScroll={true}
+                style={{ width: window.innerWidth, height: window.innerHeight}}
+                pullToRefresh={<PullToRefresh // import { PullToRefresh } from 'antd-mobile'
+                  refreshing={pullLoading}
+                  onRefresh={this.onRefresh}
+                />}
+              />
+              :
+              list && !list.length ?
+                <div >
+                  <p>暂无数据</p>
+                </div> : null
+          }
         </WingBlank>
       </div>
     )
   }
+
+
 }
 
 

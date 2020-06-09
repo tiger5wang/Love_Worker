@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
 }
+.container {
+  background-color: white;
+  height: 100%;
+  text-align: center
+}
 .title {
   overflow: hidden;
   white-space: nowrap;

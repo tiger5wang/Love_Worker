@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {  WingBlank, SearchBar, Grid, Flex } from 'antd-mobile';
+import {  WingBlank, WhiteSpace, SearchBar, Grid, Flex } from 'antd-mobile';
 import { connect } from 'dva';
 import { createForm } from 'rc-form';
-import { sk_user_token } from '@/config/StorageKeys';
+
 import liest1 from '@/assets/img/c3.png';
 import liest2 from '@/assets/img/c5.png';
 import liest3 from '@/assets/img/c6.png';
@@ -10,6 +10,7 @@ import liest4 from '@/assets/img/c7.png';
 import liest5 from '@/assets/img/c8.png';
 import delte from '@/assets/img/delete.png';
 import styles from '@/pages/home/index.css';
+import router from 'umi/router';
 
 
 
@@ -22,39 +23,56 @@ class ZaiXian extends Component {
   };
 
   componentDidMount(){
-
+    this.historySearch()
   }
 
-
-
-
-  saveBD=val=>{
-    var a = []
-    const shousuo = window.localStorage.getItem('shousuo');
+  historySearch = async () => {
+    let a = [];
+    const shousuo = await window.localStorage.getItem('shousuo');
     if(shousuo != undefined ||shousuo!=null ){
-      a = shousuo.split(',')
-      a.push(val)
-    }else{
-      var a = []
+      a = shousuo.split(',');
     }
-    localStorage.setItem('shousuo', a);
+    this.setState({
+      sousuodata: a
+    });
   };
 
+  SearchValue = value => {
+    router.push({
+      pathname: '/home/HuaShuList',
+      query: {
+        filterData: value,
+      },
+    });
+  };
+
+  saveBD = val => {
+    let a = [];
+    const shousuo = window.localStorage.getItem('shousuo');
+    if(shousuo != undefined ||shousuo!=null ){
+      a = shousuo.split(',');
+      if(a.indexOf(val) === -1) {
+        a.push(val)
+      }
+    }
+    this.setState({
+      sousuodata: a
+    });
+    localStorage.setItem('shousuo', a);
+    this.SearchValue(val)
+  };
 
   delesosuo=()=>{
+    console.log('-------------------')
     localStorage.setItem('shousuo', '');
+    this.setState({
+      sousuodata: []
+    });
   }
 
   render() {
-    var dataaaa = []
 
-     const shousuo = window.localStorage.getItem('shousuo');
-    if(shousuo!=null){
-      shousuo.split(',').map(i=>dataaaa.push(i))
-    }
-
-
-    const{remen} = this.state;
+    const{remen, sousuodata} = this.state;
 
     const listdata = [
       { 'name': '国产', 'imgPath': `${liest1}` },
@@ -71,57 +89,62 @@ class ZaiXian extends Component {
 
 
     return (
-      <div>
-        <div style={{ backgroundColor: '#ffffff' }}>
+      <div style={{ backgroundColor: '#efefef'}}>
+        <Grid columnNum={5} data={data} hasLine={false}/>
+        <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.saveBD(value)}/>
 
-          <WingBlank size="sm">
-            <Grid columnNum={5} data={data} hasLine={false}/>
-          </WingBlank>
-        </div>
-        <WingBlank>
-           <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.saveBD(value)}/>
-        </WingBlank>
-        <div style={{backgroundColor:'#ffffff', width:'100%', height:'100%'}}>
+        <div className={styles.searchbox}>
           <WingBlank>
+            <WhiteSpace size={'lg'}/>
             <Flex justify="between">
               <span style={{fontSize:17}}>历史搜索</span>
               <img style={{width:30}} onClick={()=>this.delesosuo()} src={delte} alt=''/>
             </Flex>
-          </WingBlank>
-        </div>
-        <div className={styles.itemContain}>
-          {
-            dataaaa && dataaaa.length > 0 && dataaaa.map((item2, index2) => {
-              return (
-                item2===""||item2===null?null:
-                  <button className={styles.btn}
-                >{item2}</button>
-              );
-            })
-          }
-        </div>
+            <WhiteSpace size={'lg'}/>
+            <Flex wrap={'wrap'} justify={'start'}>
+              {
+                sousuodata && sousuodata.length > 0 && sousuodata.map((item2, index2) => {
+                  if(item2) {
+                    return (
+                      <button
+                        key={item2}
+                        className={styles.btn}
+                        onClick={() => this.saveBD(item2)}
+                      >
+                        {item2}
+                      </button>
+                    );
+                  }
+                })
+              }
+            </Flex>
 
-        <div style={{ backgroundColor: '#ffffff', width: '100%', height: '100%' }}>
-          <WingBlank>
+            <WhiteSpace size={'xl'}/>
+
             <Flex justify="start">
               <span style={{ fontSize: 17 }}>热门搜索</span>
+            </Flex>
+            <WhiteSpace size={'lg'}/>
+            <Flex wrap={'wrap'} justify={'between'}>
+              {
+                remen && remen.length > 0 && remen.map((item2, index2) => {
+                  if(item2) {
+                    return (
+                      <button
+                        key={item2}
+                        className={styles.btn2}
+                        onClick={() => this.saveBD(item2)}
+                      >
+                        {item2}
+                      </button>
+                    );
+                  }
+                })
+              }
             </Flex>
           </WingBlank>
         </div>
 
-
-
-         <div className={styles.itemContain}>
-          {
-            remen && remen.length > 0 && remen.map((item2, index2) => {
-              return (
-                item2===""||item2===null?null:
-                  <button className={styles.btn2}
-                >{item2}</button>
-              );
-            })
-          }
-        </div>
       </div>
 
     );

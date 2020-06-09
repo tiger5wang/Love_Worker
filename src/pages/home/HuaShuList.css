@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 .header {
   background-color: #ec1a5b;
   padding: 10px;
@@ -11,9 +15,7 @@
 .goback {
   display: inline-block;
 }
-.back {
 
-}
 .line {
   display: inline-block;
   height: 1rem;
@@ -48,4 +50,20 @@
   letter-spacing: 1px;
   line-height: 1.2rem;
   font-size: .8rem
+}
+.container {
+  background-color: white;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.noData {
+  font-size: 17px;
 }
