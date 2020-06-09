@@ -170,6 +170,7 @@ class SessionCategoryList extends Component {
   };
 
   justifyPay = (data) => {
+    console.log('-------------', data)
     let formdata = new FormData();
     formdata.append('id', this.pathC);
     formdata.append('sid', data.id);
@@ -232,7 +233,7 @@ class SessionCategoryList extends Component {
                    style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
                 <a
                   style={{ width: '100%', height: '100%'}}
-                  onClick={() => this.justifyPay(data)}
+                  onClick={() => this.justifyPay(item)}
                 >
                   <img
                     src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
