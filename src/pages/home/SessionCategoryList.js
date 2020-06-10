@@ -75,6 +75,9 @@ class SessionCategoryList extends Component {
   componentDidMount() {
     const url_c = window.localStorage.getItem('c');
     this.flag = window.localStorage.getItem('flag');
+    if(!this.flag) {
+      localStorage.setItem('flag', 1);
+    }
     this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
     this.setask();
   }
@@ -186,7 +189,6 @@ class SessionCategoryList extends Component {
   };
 
   goToDetail = (data) => {
-    localStorage.setItem('flag', 2);
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {

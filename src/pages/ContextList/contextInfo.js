@@ -3,8 +3,10 @@ import React, {Component} from 'react';
 import { Flex, Icon, Toast } from 'antd-mobile';
 import router from 'umi/router';
 import { connect } from 'dva';
+import moment from 'moment';
 import VideoPlayer from '../VideoPlayer';
 import styles from './contextInfo.css'
+import proxyRequest from '@/utils/request';
 
 
 class contextInfo extends Component {
@@ -15,7 +17,25 @@ class contextInfo extends Component {
   }
 
   componentDidMount(){
-      // this.get_context_info()
+    const flag = window.localStorage.getItem('flag');
+    const paytype = window.localStorage.getItem('paytype');
+    const paydate = window.localStorage.getItem('paydate');
+    if(flag == '2') {
+      if(paytype == 2) {  // 包天
+        if(moment(paydate) == moment()) {
+          this.setState({
+            isPay: true
+          })
+        }
+      }
+      if(paytype == 3) {  // 包月
+        if(moment(paydate).add(1, 'months') >= moment()) {
+          this.setState({
+            isPay: true
+          })
+        }
+      }
+    }
   }
 
   get_context_info =() =>{
@@ -47,10 +67,47 @@ class contextInfo extends Component {
   };
 
   returnPage = () => {
+    const flag = window.localStorage.getItem('flag');
+    if(flag != 2) {
+      localStorage.setItem('flag', 2);
+    }
     this.props.history.goBack()
   };
 
-  toPay = () => {
+  toPay = (data, type) => {
+    // id=6
+    // orderid=随机的订单号
+    // money=价格
+    // zname=资源名称
+    // paytype=1微信，2支付宝
+    let money;
+    if(type === 1) money = data.price;
+    if(type === 2) money = data.btprice;
+    if(type === 3) money = data.byprice;
+    const url_c = window.localStorage.getItem('c');
+    let formdata = new FormData();
+    formdata.append('id', url_c);
+    formdata.append('orderid', data.id);
+    formdata.append('money', this.page);
+    formdata.append('zname', data.name);
+    formdata.append('paytype', 1);
+
+    proxyRequest.post('/Api/startpay', formdata)
+      .then(result => {
+        // console.log('==========================', result)
+        const {code, data, msg} = result;
+        if(code == 0) {
+          localStorage.setItem('paytype', type);
+          localStorage.setItem('paydate', new Date());
+          this.setState({
+            isPay: true
+          })
+        }
+      })
+      .catch(error => {
+        console.log('error', error);
+        Toast.fail('支付失败');
+      })
     this.setState({
       isPay: true
     })
@@ -58,7 +115,7 @@ class contextInfo extends Component {
 
   render() {
     const flag = window.localStorage.getItem('flag');
-    console.log('------------------', flag)
+    // console.log('------------------', flag)
     const {data} = this.props.location.query;
     const videoJsOptions = {
       autoplay: true,  //自动播放
@@ -93,9 +150,9 @@ class contextInfo extends Component {
         </div>
         {flag == 2 && !this.state.isPay ?
           <div className={styles.backImg} style={{backgroundImage: `url(${data.image})`}}>
-            <button onClick={this.toPay}>{data.price}元单片看</button>
-            <button onClick={this.toPay}>{data.btprice}元包天看</button>
-            <button onClick={this.toPay}>{data.byprice}元包月看</button>
+            <button onClick={() => this.toPay(data, 1)}>{data.price}元单片看</button>
+            <button onClick={() => this.toPay(data, 2)}>{data.btprice}元包天看</button>
+            <button onClick={() => this.toPay(data, 3)}>{data.byprice}元包月看</button>
             <button onClick={() => this.SearchValue('全部')}>更多视频</button>
           </div>
           :

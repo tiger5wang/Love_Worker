@@ -121,7 +121,6 @@ class HuaShuList extends Component {
   }
 
   goToDetail = async (data) => {
-    await localStorage.setItem('flag', 2);
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {

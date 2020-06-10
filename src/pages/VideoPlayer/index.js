@@ -33,7 +33,7 @@ export default class VideoPlayer extends React.Component {
     return (
       <div>
         <div data-vjs-player>  {/*这个带有属性的div目前没看到作用，可以去掉*/}
-          <video ref={ node => this.videoNode = node } className="video-js"></video>
+          <video ref={ node => this.videoNode = node } className="video-js vjs-default-skin vjs-big-play-centered"></video>
         </div>
       </div>
     )
