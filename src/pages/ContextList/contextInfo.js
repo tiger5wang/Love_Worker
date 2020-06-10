@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import { Flex, Icon, Toast } from 'antd-mobile';
+import { Flex, Icon, Toast, ActionSheet } from 'antd-mobile';
 import router from 'umi/router';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -74,6 +74,24 @@ class contextInfo extends Component {
     this.props.history.goBack()
   };
 
+  showActionSheet = (data, type) => {
+    const BUTTONS = ['微信支付', '支付宝支付', '取消'];
+    ActionSheet.showActionSheetWithOptions({
+        options: BUTTONS,
+        cancelButtonIndex: BUTTONS.length - 1,
+        destructiveButtonIndex: -1,
+        // title: 'title',
+        title : '选择支付方式',
+        maskClosable: true,
+        'data-seed': 'logId',
+        // wrapProps,
+      },
+      (buttonIndex) => {
+        if(buttonIndex === BUTTONS.length - 1) return;
+        this.setState({ clicked: BUTTONS[buttonIndex] }, () => this.toPay(data, type));
+      });
+  }
+
   toPay = (data, type) => {
     // id=6
     // orderid=随机的订单号
@@ -90,7 +108,7 @@ class contextInfo extends Component {
     formdata.append('orderid', data.id);
     formdata.append('money', this.page);
     formdata.append('zname', data.name);
-    formdata.append('paytype', 1);
+    formdata.append('paytype', this.state.clicked == '微信支付' ? 1: 2);
 
     proxyRequest.post('/Api/startpay', formdata)
       .then(result => {
@@ -150,9 +168,9 @@ class contextInfo extends Component {
         </div>
         {flag == 2 && !this.state.isPay ?
           <div className={styles.backImg} style={{backgroundImage: `url(${data.image})`}}>
-            <button onClick={() => this.toPay(data, 1)}>{data.price}元单片看</button>
-            <button onClick={() => this.toPay(data, 2)}>{data.btprice}元包天看</button>
-            <button onClick={() => this.toPay(data, 3)}>{data.byprice}元包月看</button>
+            <button onClick={() => this.showActionSheet(data, 1)}>{data.price}元单片看</button>
+            <button onClick={() => this.showActionSheet(data, 2)}>{data.btprice}元包天看</button>
+            <button onClick={() => this.showActionSheet(data, 3)}>{data.byprice}元包月看</button>
             <button onClick={() => this.SearchValue('全部')}>更多视频</button>
           </div>
           :
