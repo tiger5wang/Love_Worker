@@ -16,7 +16,6 @@ import {
 import styles from './SessionCategoryList.css';
 import { createForm } from 'rc-form';
 import router from 'umi/router';
-import {UrlConfig} from '@/config/config'
 // 等会要放开
 import lb1 from '../../assets/img/lb1.jpg';
 import lb2 from '../../assets/img/lb2.jpg';
@@ -58,10 +57,6 @@ class SessionCategoryList extends Component {
     super(props);
     this.state = {
       dataList: [],
-      selectedTab: 'words',
-      open: true,
-      visible: false,
-      selected: '',
       data: ['1', '2'],
       imgHeight: 176,
       list: [],
@@ -79,11 +74,10 @@ class SessionCategoryList extends Component {
 
   componentDidMount() {
     const url_c = window.localStorage.getItem('c');
-    // console.log('url_c', url_c, getPageQuery().c )
+    this.flag = window.localStorage.getItem('flag');
     this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
     this.setask();
   }
-
 
   // 随机值
   Randomuuid=()=> {
@@ -104,20 +98,22 @@ class SessionCategoryList extends Component {
       this.setCarousel();
       localStorage.setItem('c', this.pathC);
 
-      if (user) {
+      if (!this.flag || this.flag == 1) {
         let formdata = new FormData();
         formdata.append('id', this.pathC);
 
         proxyRequest.post('/Api/setask', formdata)
           .then(function(json) {
             // console.log(JSON.stringify(json))
-            if (json.code == '0') {
+            // if (json.code == '0') {
               // console.log('232323233-----正确');
-            }
+            // }
           })
-          .catch(error => {console.log(error);Toast.fail(error)});
-      } else {
-        // console.log(this.Randomuuid());
+          .catch(error => {
+            console.log(error);
+          });
+      }
+      if(!user) {
         localStorage.setItem('username', this.Randomuuid() + this.Randomuuid() + this.Randomuuid() + this.Randomuuid());
       }
     } else {
@@ -127,7 +123,6 @@ class SessionCategoryList extends Component {
 
   // http://www.verming.com/Api/getindex
   getIndex = () => {
-    // console.log('-------------page', this.page)
     let formdata = new FormData();
     formdata.append('id', this.pathC);
     formdata.append('page', this.page);
@@ -165,10 +160,10 @@ class SessionCategoryList extends Component {
       })
       .catch(error => {
         console.log('error', error);
-        Toast.fail(error)
+        Toast.fail('加载数据失败')
       })
   };
-
+  // 判断支付，跳转详情页
   justifyPay = (data) => {
     let formdata = new FormData();
     formdata.append('id', this.pathC);
@@ -177,21 +172,27 @@ class SessionCategoryList extends Component {
     proxyRequest.post('/Api/getdetails', formdata)
       .then(result => {
         console.log('000000000000', result)
+        const {code, data, msg} = result;
+        if(code === 0) {
+          this.goToDetail(data)
+        } else {
+          Toast.info(msg);
+        }
       })
       .catch(error => {
         console.log('error', error);
-        Toast.fail(error)
+        Toast.fail('加载视频失败')
       })
-  }
+  };
 
   goToDetail = (data) => {
-      router.push({
-        pathname: '/ContextList/contextInfo',
-        query: {
-
-        },
+    localStorage.setItem('flag', 2);
+    router.push({
+      pathname: '/ContextList/contextInfo',
+      query: {
+        data
+      },
     })
-    // }
   };
 
 
@@ -229,26 +230,22 @@ class SessionCategoryList extends Component {
           {data.length > 0 && data.map((item, index) => {
             return (
               <div key={item.id}
-                   style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
-                <a
-                  style={{ width: '100%', height: '100%'}}
-                  onClick={() => this.justifyPay(data)}
-                >
-                  <img
-                    src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
-                    alt={item.name}
-                    style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
-                    onLoad={() => {
-                      window.dispatchEvent(new Event('resize'));
-                      // this.setState({ imgHeight: 'auto' });
-                    }}
-                    onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
-                  />
-                  <WhiteSpace size={'sm'}/>
-                  <p className={styles.title}>{item.name}</p>
-                  <WhiteSpace size={'sm'}/>
-                  <p style={{color: 'red'}}>{item.cs}人付款</p>
-                </a>
+                   style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}
+                   onClick={() => this.justifyPay(item)}>
+                <img
+                  src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
+                  alt={item.name}
+                  style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
+                  onLoad={() => {
+                    window.dispatchEvent(new Event('resize'));
+                    // this.setState({ imgHeight: 'auto' });
+                  }}
+                  onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
+                />
+                <WhiteSpace size={'sm'}/>
+                <p className={styles.title}>{item.name}</p>
+                <WhiteSpace size={'sm'}/>
+                <p style={{color: 'red'}}>{item.cs}人付款</p>
               </div>
             )
           })}
@@ -279,8 +276,7 @@ class SessionCategoryList extends Component {
             // afterChange={index => console.log('slide to', index)}
           >
             {this.state.data.map(val => (
-              <a
-                key={val}
+              <a key={val}
                 style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
               >
                 <img
@@ -301,7 +297,7 @@ class SessionCategoryList extends Component {
         </NoticeBar>
 
         {/*分类部分*/}
-        <Grid  columnNum={6} data={data} hasLine={false}/>
+        <Grid  columnNum={6} data={data} hasLine={false} onClick={(item) => this.SearchValue(item.text)}/>
 
         <WingBlank>
           {

@@ -1,0 +1,30 @@
+.header {
+  background-color: rgba(100,100,100, 0.5);
+  padding: 10px 0;
+
+}
+.title {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  color: white;
+}
+.backImg {
+  width: 100vw;
+  height: 100vh;
+  background: no-repeat center/contain;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*background-image: url("../../assets/img/fenleihong.png");*/
+}
+button {
+  background-color: orange;
+  padding: 10px 15px;
+  border-radius: 20px;
+  font-size: 17px;
+  margin: 20px auto;
+}
