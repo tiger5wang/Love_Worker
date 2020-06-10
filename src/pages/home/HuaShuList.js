@@ -31,13 +31,12 @@ class HuaShuList extends Component {
   }
 
   componentDidMount() {
+    this.flag = window.localStorage.getItem('flag');
     this.searchDataList();
   }
 
   returnPage = () => {
-    router.push({
-      pathname: '/',
-    });
+    this.props.history.goBack()
   };
 
   searchDataList = () => {
@@ -98,10 +97,41 @@ class HuaShuList extends Component {
     });
   };
 
+  // 判断支付，跳转详情页
+  justifyPay = (data) => {
+    const url_c = window.localStorage.getItem('c');
+    let formdata = new FormData();
+    formdata.append('id', url_c);
+    formdata.append('sid', data.id);
+
+    proxyRequest.post('/Api/getdetails', formdata)
+      .then(result => {
+        console.log('000000000000', result)
+        const {code, data, msg} = result;
+        if(code === 0) {
+          this.goToDetail(data)
+        } else {
+          Toast.info(msg)
+        }
+      })
+      .catch(error => {
+        console.log('error', error);
+        Toast.fail('视频加载失败')
+      })
+  }
+
+  goToDetail = async (data) => {
+    router.push({
+      pathname: '/ContextList/contextInfo',
+      query: {
+        data
+      },
+    })
+  };
 
   //上拉加载
   onEndReached = () => {
-    console.log('+++++++++++++++++++++++++++++', this.state.loadEnd)
+    // console.log('+++++++++++++++++++++++++++++', this.state.loadEnd)
     if(!this.state.loadEnd) {
       this.page += 1;
       this.setState({upLoading: true});
@@ -124,26 +154,22 @@ class HuaShuList extends Component {
         {data.length > 0 && data.map((item, index) => {
           return (
             <div key={item.id}
-                 style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}>
-              <a
-                style={{ width: '100%', height: '100%'}}
-                onClick={() => console.log('click')}
-              >
-                <img
-                  src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
-                  alt={item.name}
-                  style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
-                  onLoad={() => {
-                    window.dispatchEvent(new Event('resize'));
-                    // this.setState({ imgHeight: 'auto' });
-                  }}
-                  onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
-                />
-                <WhiteSpace size={'sm'}/>
-                <p className={styles.title}>{item.name}</p>
-                <WhiteSpace size={'sm'}/>
-                <p style={{color: 'red'}}>{item.cs}人付款</p>
-              </a>
+                 style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}
+                 onClick={() => this.justifyPay(item)}>
+              <img
+                src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
+                alt={item.name}
+                style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
+                onLoad={() => {
+                  window.dispatchEvent(new Event('resize'));
+                  // this.setState({ imgHeight: 'auto' });
+                }}
+                onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
+              />
+              <WhiteSpace size={'sm'}/>
+              <p className={styles.title}>{item.name}</p>
+              <WhiteSpace size={'sm'}/>
+              <p style={{color: 'red'}}>{item.cs}人付款</p>
             </div>
           )
         })}
