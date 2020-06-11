@@ -50,7 +50,13 @@ class register extends Component {
 
   render() {
     let orders = window.localStorage.getItem('orders')
-    let list = orders.split(',');
+    var list = []
+    if(orders) {
+       list = orders.split(',');
+    }else {
+      list = []
+    }
+
     return (
       <div className={Styles.box}>
         {list.length > 0 ? list.map(item => <Item extra={item}>订单号</Item>) :

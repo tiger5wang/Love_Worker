@@ -63,7 +63,6 @@ class ZaiXian extends Component {
   };
 
   delesosuo=()=>{
-    console.log('-------------------')
     localStorage.setItem('shousuo', '');
     this.setState({
       sousuodata: []
@@ -108,7 +107,7 @@ class ZaiXian extends Component {
                     return (
                       <button
                         key={item2}
-                        className={styles.btn}
+                        className={styles.btn2}
                         onClick={() => this.saveBD(item2)}
                       >
                         {item2}

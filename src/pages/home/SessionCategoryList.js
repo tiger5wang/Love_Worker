@@ -16,6 +16,7 @@ import {
 import styles from './SessionCategoryList.css';
 import { createForm } from 'rc-form';
 import router from 'umi/router';
+import LazyLoad from 'react-lazyload'
 // 等会要放开
 import lb1 from '../../assets/img/lb1.jpg';
 import lb2 from '../../assets/img/lb2.jpg';
@@ -33,7 +34,7 @@ import liest10 from  '../../assets/img/1577446105_461386401.png'
 import liest11 from  '../../assets/img/1577453505_1414941554.png'
 import liest12 from  '../../assets/img/1577453865_6817530.png'
 
-import preloadImg from  '../../assets/img/mide170pl.jpg'
+import preloadImg from  '../../assets/img/yujiazai.gif'
 
 import { getPageQuery } from '@/utils/utils'
 import proxyRequest from '@/utils/request';
@@ -56,6 +57,7 @@ class SessionCategoryList extends Component {
   constructor(props){
     super(props);
     this.state = {
+      imageStart:'',
       dataList: [],
       data: ['1', '2'],
       imgHeight: 176,
@@ -75,10 +77,12 @@ class SessionCategoryList extends Component {
   componentDidMount() {
     const url_c = window.localStorage.getItem('c');
     this.flag = window.localStorage.getItem('flag');
+
     if(!this.flag) {
       localStorage.setItem('flag', 1);
     }
     this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
+    console.log(JSON.stringify(this.pathC))
     this.setask();
   }
 
@@ -93,6 +97,9 @@ class SessionCategoryList extends Component {
       data: [lb1, lb2]
     })
   };
+
+
+
 
   setask = () => {
     const user = window.localStorage.getItem('username');
@@ -224,6 +231,19 @@ class SessionCategoryList extends Component {
     this.getIndex();
     //接口请求第一页数据,完成后将pullLoading设为false
   }
+
+  // 图片预加载
+  yueJiaZai = ()=>{
+    this.setState({
+      imageStart:'开始'
+    })
+  }
+
+  yuJiazaiError=()=>{
+    this.setState({
+      imageStart:'error'
+    })
+  }
 //获取item进行展示
   renderRow = (data, i) => {
     // console.log(data, i)
@@ -266,7 +286,9 @@ class SessionCategoryList extends Component {
     const { list, dataSource, upLoading, pullLoading } = this.state;
     return(
       <div className={styles.container}>
-        <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
+
+          <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
+
 
         {/*轮播图*/}
          <WingBlank size="sm">
@@ -299,7 +321,7 @@ class SessionCategoryList extends Component {
         </NoticeBar>
 
         {/*分类部分*/}
-        <Grid  columnNum={6} data={data} hasLine={false} onClick={(item) => this.SearchValue(item.text)}/>
+        <Grid itemStyle={{ height: 54}} style={{width:54}}  columnNum={6} data={data} hasLine={false} onClick={(item) => this.SearchValue(item.text)}/>
 
         <WingBlank>
           {

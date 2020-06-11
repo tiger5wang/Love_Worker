@@ -197,7 +197,7 @@ class contextInfo extends Component {
       sources: [
         {
           src: data.url,
-          // type: "video/m3u8",  //类型可加可不加，目前未看到影响
+          type: "video/m3u8",  //类型可加可不加，目前未看到影响
           // type: 'video/mp4',
         }
       ]
