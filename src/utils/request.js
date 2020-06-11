@@ -154,6 +154,30 @@ async function request(url, options) {
   //       code: 404
   //     };
   //   });
+  // const Headers = new  Headers({
+  //   'Access-Control-Allow-Origin':'*',
+  //   "Content-Type":'text/plain'
+  // })
+  if(options.method === 'GET') {
+    console.log('url', url)
+    return new Promise((resolve, reject) => {
+      fetch('https://cn.bing.com/',{
+        method: 'GET',
+        mode: 'nocors'
+      })
+        .then(response => response.json())
+        .then(result => {
+          resolve(result)
+        })
+        .catch(error => {
+          if(error.message === 'Network request failed') {
+            reject({'message': '当前网络请求错误，请检查网络链接'})
+          }else {
+            reject(error)
+          }
+        })
+    })
+  }
 
   return  fetch(`${UrlConfig.base_url}${url}`, {
             method: 'POST',

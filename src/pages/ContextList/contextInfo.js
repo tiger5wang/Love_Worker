@@ -7,56 +7,104 @@ import moment from 'moment';
 import VideoPlayer from '../VideoPlayer';
 import styles from './contextInfo.css'
 import proxyRequest from '@/utils/request';
+import { UrlConfig } from '@/config/config';
+import { setUrlEncoded } from '@/utils/baseServer';
 
 
 class contextInfo extends Component {
 
 
   state={
-    isPay: false
+    isPay: false,
+    LDFlag: 1
   }
 
-  componentDidMount(){
+  componentWillUnmount() {
     const flag = window.localStorage.getItem('flag');
-    const paytype = window.localStorage.getItem('paytype');
-    const paydate = window.localStorage.getItem('paydate');
-    if(flag == '2') {
-      if(paytype == 2) {  // 包天
-        if(moment(paydate) == moment()) {
-          this.setState({
-            isPay: true
-          })
-        }
-      }
-      if(paytype == 3) {  // 包月
-        if(moment(paydate).add(1, 'months') >= moment()) {
-          this.setState({
-            isPay: true
-          })
-        }
-      }
+    if(flag != 2) {
+      localStorage.setItem('flag', 2);
     }
   }
 
-  get_context_info =() =>{
-    const{dispatch, location} = this.props;
-    dispatch({
-      type:'postContext/postContextInfo',
-      payload:{
-        id: location.query.ID
-      },
-      callback: response => {
-        if(response.code===200){
-          this.setState({
-            context: response.context
-          })
-        }else{
-          Toast.offline(response.message);
-        }
-      }
-    })
-  };
+  componentDidMount(){
+    this.orders = window.localStorage.getItem('orders');
+    this.pathC = window.localStorage.getItem('c');
+    // setInterval(() => console.log('22222222222222222222222'), 1000)
+    this.getFlag();
+    this.getPayStatus();
 
+
+  }
+
+  justifyPay = () => {
+    const paytype = window.localStorage.getItem('paytype');
+    const paydate = window.localStorage.getItem('paydate');
+
+    if(paytype == 1) {
+      this.setState({
+        isPay: true
+      });
+      localStorage.setItem('currentOrder', '');
+    }
+    if(paytype == 2) {  // 包天
+      if(moment(paydate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')) {
+        this.setState({
+          isPay: true
+        })
+      }
+    }
+    if(paytype == 3) {  // 包月
+      if(moment(paydate).add(1, 'months') >= moment()) {
+        this.setState({
+          isPay: true
+        })
+      }
+    }
+
+  }
+
+  // http://www.verming.com/Api/get_os
+  getPayStatus = () => {
+    let currentOrder = window.localStorage.getItem('currentOrder');
+    // Toast.info(currentOrder)
+    // alert(currentOrder)
+    // alert(this.pathC)
+    if(currentOrder) {
+      let formdata = new FormData();
+      formdata.append('id', this.pathC);
+      formdata.append('orderid', currentOrder);
+
+      proxyRequest.post('/Api/get_os', formdata)
+        .then(result => {
+          const {code, msg} = result;
+          // Toast.info(code)
+          if(code == 0) {
+            this.justifyPay()
+          }
+          console.log('-------------', result)
+        })
+        .catch(err => console.log('error', err))
+    }
+
+  }
+
+  // 获取flag
+  getFlag = () => {
+    let formdata = new FormData();
+    formdata.append('id', this.pathC);
+    proxyRequest.post('/Api/get_flag', formdata)
+      .then(result => {
+        let {code, flag} = result;
+        if(code == 0) {
+          this.setState({
+            LDFlag: flag
+          })
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
+  // 更多视频
   SearchValue = value => {
     router.push({
       pathname: '/home/HuaShuList',
@@ -66,14 +114,12 @@ class contextInfo extends Component {
     });
   };
 
+  // 返回
   returnPage = () => {
-    const flag = window.localStorage.getItem('flag');
-    if(flag != 2) {
-      localStorage.setItem('flag', 2);
-    }
     this.props.history.goBack()
   };
 
+  // 选择支付弹窗
   showActionSheet = (data, type) => {
     const BUTTONS = ['微信支付', '支付宝支付', '取消'];
     ActionSheet.showActionSheetWithOptions({
@@ -102,34 +148,33 @@ class contextInfo extends Component {
     if(type === 1) money = data.price;
     if(type === 2) money = data.btprice;
     if(type === 3) money = data.byprice;
-    const url_c = window.localStorage.getItem('c');
-    let formdata = new FormData();
-    formdata.append('id', url_c);
-    formdata.append('orderid', data.id);
-    formdata.append('money', this.page);
-    formdata.append('zname', data.name);
-    formdata.append('paytype', this.state.clicked == '微信支付' ? 1: 2);
 
-    proxyRequest.post('/Api/startpay', formdata)
-      .then(result => {
-        // console.log('==========================', result)
-        const {code, data, msg} = result;
-        if(code == 0) {
-          localStorage.setItem('paytype', type);
-          localStorage.setItem('paydate', new Date());
-          this.setState({
-            isPay: true
-          })
-        }
-      })
-      .catch(error => {
-        console.log('error', error);
-        Toast.fail('支付失败');
-      })
-    this.setState({
-      isPay: true
-    })
+    let paytype = this.state.clicked == '微信支付' ? 1: 2
+    let datetime = new Date().getTime().toString().substr(-12);
+    this.datetime = datetime;
+    let pars = `id=${this.pathC}&orderid=${datetime}&money=${money}&zname=${data.id}&paytype=${paytype}`
+
+    let request_url = UrlConfig.base_url + '/Pay/startpay?' + pars;
+    localStorage.setItem('currentOrder', datetime)
+    localStorage.setItem('paytype', type);
+    localStorage.setItem('paydate', new Date());
+    if(!this.orders) {
+      localStorage.setItem('orders', datetime);
+    } else {
+      localStorage.setItem('orders', `${this.orders},${datetime}`);
+    }
+
+    setInterval(() => console.log('11111111111111'), 1000)
+
+    window.location.href = request_url;
+
+    //
+    // this.setState({
+    //   isPay: true
+    // })
   }
+
+
 
   render() {
     const flag = window.localStorage.getItem('flag');
@@ -167,8 +212,8 @@ class contextInfo extends Component {
           </Flex>
         </div>
         {flag == 2 && !this.state.isPay ?
-          <div className={styles.backImg} style={{backgroundImage: `url(${data.image})`}}>
-            <button onClick={() => this.showActionSheet(data, 1)}>{data.price}元单片看</button>
+          <div className={styles.backImg} >
+            {this.state.LDFlag === 2 && <button onClick={() => this.showActionSheet(data, 1)}>{data.price}元单片看</button>}
             <button onClick={() => this.showActionSheet(data, 2)}>{data.btprice}元包天看</button>
             <button onClick={() => this.showActionSheet(data, 3)}>{data.byprice}元包月看</button>
             <button onClick={() => this.SearchValue('全部')}>更多视频</button>
