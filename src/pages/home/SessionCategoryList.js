@@ -204,6 +204,7 @@ class SessionCategoryList extends Component {
     })
   };
 
+
   SearchValue = value => {
     router.push({
       pathname: '/home/HuaShuList',
@@ -283,10 +284,15 @@ class SessionCategoryList extends Component {
     }));
 
     const { list, dataSource, upLoading, pullLoading } = this.state;
+
+    const searchTitle = (
+      <span style={{ color: '#696969'}}>搜索关键字例如:人兽、强奸...</span>
+    )
     return(
       <div className={styles.container}>
 
-        <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
+          <SearchBar placeholder={searchTitle} onSubmit={value => this.SearchValue(value)}/>
+
 
         {/*轮播图*/}
          <WingBlank size="sm">
@@ -319,7 +325,14 @@ class SessionCategoryList extends Component {
         </NoticeBar>
 
         {/*分类部分*/}
-        <Grid itemStyle={{ height: 54}} style={{width:54}}  columnNum={6} data={data} hasLine={false} onClick={(item) => this.SearchValue(item.text)}/>
+        <Grid itemStyle={{height:88}} renderItem={dataItem => (
+        <div>
+          <img src={dataItem.icon} style={{ width: '50px', height: '50px' }} alt="" />
+          <div style={{ color: '#696969', fontSize: '14px', marginTop: '5px' }}>
+            <span>{dataItem.text}</span>
+          </div>
+        </div>
+      )} columnNum={6} data={data} hasLine={false} onClick={(item) => this.SearchValue(item.text)}/>
 
         <WingBlank>
           {
