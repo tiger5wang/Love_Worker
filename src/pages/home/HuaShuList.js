@@ -11,7 +11,7 @@ import {
 import router from 'umi/router';
 import styles from './HuaShuList.css';
 import proxyRequest from '@/utils/request';
-import preloadImg from  '../../assets/img/mide170pl.jpg';
+import preloadImg from  '../../assets/img/yujiazai.gif';
 
 
 class HuaShuList extends Component {

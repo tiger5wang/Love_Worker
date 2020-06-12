@@ -26,13 +26,21 @@ class contextInfo extends Component {
       upLoading : false,
       pullLoading : false,
       loadEnd: false,
+      orientation: 0,
+      data: this.props.location.query.data
     };
     this.page = 0;
     this.data = []
   }
 
-
   componentDidMount(){
+    let _this = this;
+    window.addEventListener("orientationchange", function() {
+      // alert(window.orientation);
+      _this.forceUpdate();
+      _this.setState({orientation: window.orientation})
+    }, false);
+
     this.orders = window.localStorage.getItem('orders');
     this.pathC = window.localStorage.getItem('c');
     this.getFlag();
@@ -176,12 +184,11 @@ class contextInfo extends Component {
   }
 
 
-
   render() {
-    const { list, dataSource, upLoading, pullLoading } = this.state;
+    // alert('render')
+    const { list, dataSource, upLoading, pullLoading, data } = this.state;
     const flag = window.localStorage.getItem('flag');
     // console.log('------------------', flag)
-    const {data} = this.props.location.query;
     const videoJsOptions = {
       autoplay: true,  //自动播放
       language: 'zh-CN',
@@ -222,7 +229,12 @@ class contextInfo extends Component {
           </div>
           :
           <div>
-            <VideoPlayer {...videoJsOptions} />
+            <VideoPlayer isreload={false} data={videoJsOptions} callback={() => {
+              const flag = window.localStorage.getItem('flag');
+              if(flag != 2) {
+                localStorage.setItem('flag', 2);
+              }
+            }} />
             <WingBlank>
               {
                 list && list.length &&
@@ -295,7 +307,7 @@ class contextInfo extends Component {
       })
   };
   // 判断支付，跳转详情页
-  justifyPay = (data) => {
+  switchItem = (data) => {
     let formdata = new FormData();
     formdata.append('id', this.pathC);
     formdata.append('sid', data.id);
@@ -305,7 +317,12 @@ class contextInfo extends Component {
         console.log('000000000000', result)
         const {code, data, msg} = result;
         if(code === 0) {
-          this.goToDetail(data)
+          this.setState({
+            data,
+            isPay: false
+          });
+          this.justifyPay()
+          // this.goToDetail(data)
         } else {
           Toast.info(msg);
         }
@@ -314,15 +331,6 @@ class contextInfo extends Component {
         console.log('error', error);
         Toast.fail('加载视频失败')
       })
-  };
-  // 跳转详情
-  goToDetail = (data) => {
-    router.push({
-      pathname: '/ContextList/contextInfo',
-      query: {
-        data
-      },
-    })
   };
 
   //上拉加载
@@ -334,6 +342,7 @@ class contextInfo extends Component {
       this.getIndex();
     }
   }
+
 //下拉刷新
   onRefresh = () => {
     this.setState({ pullLoading: true });
@@ -352,7 +361,7 @@ class contextInfo extends Component {
           return (
             <div key={item.id}
                  style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}
-                 onClick={() => this.justifyPay(item)}>
+                 onClick={() => this.switchItem(item)}>
               <img
                 src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
                 alt={item.name}
