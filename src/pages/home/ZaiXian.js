@@ -69,6 +69,15 @@ class ZaiXian extends Component {
     });
   }
 
+  renderItem = (item) => {
+    return (
+      <div className={styles.cate_selection}>
+        <img src={item.icon} alt="" className={styles.cate_img}/>
+        <span className={styles.cate_text}>{item.text}</span>
+      </div>
+    )
+  }
+
   render() {
 
     const{remen, sousuodata} = this.state;
@@ -88,30 +97,38 @@ class ZaiXian extends Component {
 
 
     return (
-      <div style={{ backgroundColor: '#efefef'}}>
-        <Grid columnNum={5} data={data} hasLine={false} onClick={(item) => this.saveBD(item.text)}/>
-        <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.saveBD(value)}/>
+      <div style={{ backgroundColor: '#efefef', height: '100%'}}>
+        <Grid
+          columnNum={5}
+          data={data}
+          hasLine={false}
+          square={false}
+          onClick={(item) => this.saveBD(item.text)}
+          renderItem={(el) => this.renderItem(el)}
+        />
+
+        <SearchBar placeholder="搜索关键字例" onSubmit={value => this.saveBD(value)}/>
 
         <div className={styles.searchbox}>
           <WingBlank>
             <WhiteSpace size={'lg'}/>
             <Flex justify="between">
-              <span style={{fontSize:17}}>历史搜索</span>
-              <img style={{width:30}} onClick={()=>this.delesosuo()} src={delte} alt=''/>
+              <span className={styles.searchName}>历史搜索</span>
+              <img style={{width:15}} onClick={()=>this.delesosuo()} src={delte} alt=''/>
             </Flex>
             <WhiteSpace size={'lg'}/>
-            <Flex wrap={'wrap'} justify={'start'}>
+            <Flex wrap={'wrap'}>
               {
                 sousuodata && sousuodata.length > 0 && sousuodata.map((item2, index2) => {
                   if(item2) {
                     return (
-                      <button
+                      <div
                         key={item2}
-                        className={styles.btn2}
+                        className={styles.classfyBtn}
                         onClick={() => this.saveBD(item2)}
                       >
                         {item2}
-                      </button>
+                      </div>
                     );
                   }
                 })
@@ -121,21 +138,21 @@ class ZaiXian extends Component {
             <WhiteSpace size={'xl'}/>
 
             <Flex justify="start">
-              <span style={{ fontSize: 17 }}>热门搜索</span>
+              <span className={styles.searchName}>热门搜索</span>
             </Flex>
             <WhiteSpace size={'lg'}/>
-            <Flex wrap={'wrap'} justify={'between'}>
+            <Flex wrap={'wrap'}>
               {
                 remen && remen.length > 0 && remen.map((item2, index2) => {
                   if(item2) {
                     return (
-                      <button
+                      <div
                         key={item2}
-                        className={styles.btn2}
+                        className={styles.classfyBtn}
                         onClick={() => this.saveBD(item2)}
                       >
                         {item2}
-                      </button>
+                      </div>
                     );
                   }
                 })

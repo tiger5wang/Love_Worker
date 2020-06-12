@@ -79,7 +79,7 @@ class HuaShuList extends Component {
       })
       .catch(error => {
         console.log('error', error);
-        Toast.fail(error)
+        // Toast.fail(error)
       })
   };
 
@@ -181,14 +181,14 @@ class HuaShuList extends Component {
     const { list, dataSource, upLoading, pullLoading } = this.state;
     return (
       <div style={{backgroundColor: '#fff'}}>
-        <div className={styles.header}>
-          <Flex justify="start">
-            <div className={styles.goback}>
-              <Icon onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>
-            </div>
-            <span className={styles.headerFont}>搜索{this.props.location.query.filterData}的结果</span>
-          </Flex>
-        </div>
+        {/*<div className={styles.header}>*/}
+          {/*<Flex justify="start">*/}
+            {/*<div className={styles.goback}>*/}
+              {/*<Icon onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>*/}
+            {/*</div>*/}
+            {/*<span className={styles.headerFont}>搜索{this.props.location.query.filterData}的结果</span>*/}
+          {/*</Flex>*/}
+        {/*</div>*/}
 
         {list && list.length ?
           <WingBlank>

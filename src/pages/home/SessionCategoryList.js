@@ -204,7 +204,6 @@ class SessionCategoryList extends Component {
     })
   };
 
-
   SearchValue = value => {
     router.push({
       pathname: '/home/HuaShuList',
@@ -287,8 +286,7 @@ class SessionCategoryList extends Component {
     return(
       <div className={styles.container}>
 
-          <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
-
+        <SearchBar placeholder="搜索关键字例如:人兽、强奸..." onSubmit={value => this.SearchValue(value)}/>
 
         {/*轮播图*/}
          <WingBlank size="sm">

@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import { Flex, Icon, Toast, ActionSheet } from 'antd-mobile';
+import { Flex, Icon, Toast, ActionSheet, WingBlank, WhiteSpace, ListView, PullToRefresh } from 'antd-mobile';
 import router from 'umi/router';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -8,15 +8,36 @@ import VideoPlayer from '../VideoPlayer';
 import styles from './contextInfo.css'
 import proxyRequest from '@/utils/request';
 import { UrlConfig } from '@/config/config';
+import preloadImg from  '../../assets/img/yujiazai.gif'
 import { setUrlEncoded } from '@/utils/baseServer';
 
 
 class contextInfo extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state={
+      isPay: true,
+      LDFlag: 1,  // 服务端的 flag值， 1 可以免费看一部， 2 需要购买
+      list: [],
+      dataSource: new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1[0] !== r2[0]
+      }),
+      upLoading : false,
+      pullLoading : false,
+      loadEnd: false,
+    };
+    this.page = 0;
+    this.data = []
+  }
 
-  state={
-    isPay: false,
-    LDFlag: 1
+
+  componentDidMount(){
+    this.orders = window.localStorage.getItem('orders');
+    this.pathC = window.localStorage.getItem('c');
+    this.getFlag();
+    this.getPayStatus();
+    this.getIndex();
   }
 
   componentWillUnmount() {
@@ -25,22 +46,12 @@ class contextInfo extends Component {
       localStorage.setItem('flag', 2);
     }
   }
-
-  componentDidMount(){
-    this.orders = window.localStorage.getItem('orders');
-    this.pathC = window.localStorage.getItem('c');
-    // setInterval(() => console.log('22222222222222222222222'), 1000)
-    this.getFlag();
-    this.getPayStatus();
-
-
-  }
-
+  // 判断是否支付
   justifyPay = () => {
     const paytype = window.localStorage.getItem('paytype');
     const paydate = window.localStorage.getItem('paydate');
 
-    if(paytype == 1) {
+    if(paytype == 1) {  // 单片
       this.setState({
         isPay: true
       });
@@ -60,15 +71,11 @@ class contextInfo extends Component {
         })
       }
     }
-
   }
 
-  // http://www.verming.com/Api/get_os
+  // 查询支付状态
   getPayStatus = () => {
     let currentOrder = window.localStorage.getItem('currentOrder');
-    // Toast.info(currentOrder)
-    // alert(currentOrder)
-    // alert(this.pathC)
     if(currentOrder) {
       let formdata = new FormData();
       formdata.append('id', this.pathC);
@@ -79,9 +86,9 @@ class contextInfo extends Component {
           const {code, msg} = result;
           // Toast.info(code)
           if(code == 0) {
-            this.justifyPay()
+            this.justifyPay();
+            this.getIndex();
           }
-          console.log('-------------', result)
         })
         .catch(err => console.log('error', err))
     }
@@ -164,19 +171,14 @@ class contextInfo extends Component {
       localStorage.setItem('orders', `${this.orders},${datetime}`);
     }
 
-    setInterval(() => console.log('11111111111111'), 1000)
-
     window.location.href = request_url;
 
-    //
-    // this.setState({
-    //   isPay: true
-    // })
   }
 
 
 
   render() {
+    const { list, dataSource, upLoading, pullLoading } = this.state;
     const flag = window.localStorage.getItem('flag');
     // console.log('------------------', flag)
     const {data} = this.props.location.query;
@@ -186,8 +188,8 @@ class contextInfo extends Component {
       controls: true,  //控制条
       preload: 'auto',  //自动加载
       errorDisplay: true,  //错误展示
-      width: 500,  //宽
-      height: 300,  //高
+      width: window.innerWidth,  //宽
+      height: window.innerWidth * 2 / 3,  //高
       // fluid: true,  //跟随外层容器变化大小，跟随的是外层宽度
       // controlBar: false,  // 设为false不渲染控制条DOM元素，只设置controls为false虽然不展示，但还是存在
       // textTrackDisplay: false,  // 不渲染字幕相关DOM
@@ -197,7 +199,7 @@ class contextInfo extends Component {
       sources: [
         {
           src: data.url,
-          type: "video/m3u8",  //类型可加可不加，目前未看到影响
+          // type: "video/m3u8",  //类型可加可不加，目前未看到影响
           // type: 'video/mp4',
         }
       ]
@@ -219,11 +221,157 @@ class contextInfo extends Component {
             <button onClick={() => this.SearchValue('全部')}>更多视频</button>
           </div>
           :
-          <VideoPlayer {...videoJsOptions} />
+          <div>
+            <VideoPlayer {...videoJsOptions} />
+            <WingBlank>
+              {
+                list && list.length &&
+                  <ListView
+                    dataSource={dataSource.cloneWithRows(list)}
+                    renderRow={(rowData, id1, i) => this.renderRow(rowData, i)}
+                    initialListSize={5}
+                    pageSize={5}
+                    renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
+                      {upLoading ? <Icon type="loading" />: null}
+                    </div>)}
+                    onEndReached={() => this.onEndReached()}
+                    onEndReachedThreshold={50}
+                    // useBodyScroll={true}
+                    style={{ width: window.innerWidth, height: window.innerHeight}}
+                    pullToRefresh={<PullToRefresh // import { PullToRefresh } from 'antd-mobile'
+                      refreshing={pullLoading}
+                      onRefresh={this.onRefresh}
+                    />}
+                  />
+              }
+            </WingBlank>
+          </div>
         }
       </div>
     );
 
+  }
+
+  // 获取列表数据
+  getIndex = () => {
+    let formdata = new FormData();
+    formdata.append('id', this.pathC);
+    formdata.append('page', this.page);
+
+    proxyRequest.post('/Api/getindex', formdata)
+      .then(result => {
+        console.log('/Api/getindex', result)
+        const {code, data, msg} = result;
+        if(code === 0) {
+          if(!data || data.length <= 0) {
+            this.setState({
+              loadEnd: true
+            })
+          }
+          let arr = [];
+          for(let i=0; i<data.length; i++) {
+            arr.push(data[i]);
+            if(i % 2 === 1) {
+              this.data.push(arr);
+              arr = []
+            }
+          }
+          this.setState({
+            list: this.data,
+            upLoading : false,
+            pullLoading : false
+          })
+        } else {
+          Toast.info(msg);
+          this.setState({
+            upLoading : false,
+            pullLoading : false
+          })
+        }
+      })
+      .catch(error => {
+        console.log('error', error);
+        Toast.fail('加载数据失败')
+      })
+  };
+  // 判断支付，跳转详情页
+  justifyPay = (data) => {
+    let formdata = new FormData();
+    formdata.append('id', this.pathC);
+    formdata.append('sid', data.id);
+
+    proxyRequest.post('/Api/getdetails', formdata)
+      .then(result => {
+        console.log('000000000000', result)
+        const {code, data, msg} = result;
+        if(code === 0) {
+          this.goToDetail(data)
+        } else {
+          Toast.info(msg);
+        }
+      })
+      .catch(error => {
+        console.log('error', error);
+        Toast.fail('加载视频失败')
+      })
+  };
+  // 跳转详情
+  goToDetail = (data) => {
+    router.push({
+      pathname: '/ContextList/contextInfo',
+      query: {
+        data
+      },
+    })
+  };
+
+  //上拉加载
+  onEndReached = () => {
+    // console.log('+++++++++++++++++++++++++++++', this.state.loadEnd)
+    if(!this.state.loadEnd) {
+      this.page += 1;
+      this.setState({upLoading: true});
+      this.getIndex();
+    }
+  }
+//下拉刷新
+  onRefresh = () => {
+    this.setState({ pullLoading: true });
+    this.page = 0;
+    this.data = [];
+    this.getIndex();
+    //接口请求第一页数据,完成后将pullLoading设为false
+  }
+
+//获取item进行展示
+  renderRow = (data, i) => {
+    // console.log(data, i)
+    return (
+      <Flex wrap={'wrap'} style={{width: window.innerWidth - 30}}>
+        {data.length > 0 && data.map((item, index) => {
+          return (
+            <div key={item.id}
+                 style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}
+                 onClick={() => this.justifyPay(item)}>
+              <img
+                src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
+                alt={item.name}
+                style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
+                onLoad={() => {
+                  window.dispatchEvent(new Event('resize'));
+                  // this.setState({ imgHeight: 'auto' });
+                }}
+                onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
+              />
+              <WhiteSpace size={'sm'}/>
+              <p className={styles.contextNmae}>{item.name}</p>
+              <WhiteSpace size={'sm'}/>
+              <p style={{color: 'red'}}>{item.cs}人付款</p>
+            </div>
+          )
+        })}
+      </Flex>
+    )
   }
 }
 
