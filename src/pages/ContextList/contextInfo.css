@@ -11,20 +11,28 @@
   width: 100%;
   color: white;
 }
+
+
 .backImg {
   width: 100vw;
   height: 100vh;
-  background: no-repeat center/contain;
+  background: no-repeat center/cover url("../../assets/img/nppay.jpg");
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /*background-image: url("../../assets/img/fenleihong.png");*/
 }
 button {
   background-color: orange;
-  padding: 10px 15px;
-  border-radius: 20px;
+  width: 180px;
+  height: 60px;
+  border-radius: 30px;
   font-size: 17px;
-  margin: 20px auto;
+  margin: 10px auto;
+}
+.contextName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
 }

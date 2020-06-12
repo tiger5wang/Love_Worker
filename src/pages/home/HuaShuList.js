@@ -11,7 +11,7 @@ import {
 import router from 'umi/router';
 import styles from './HuaShuList.css';
 import proxyRequest from '@/utils/request';
-import preloadImg from  '../../assets/img/mide170pl.jpg';
+import preloadImg from  '../../assets/img/yujiazai.gif';
 
 
 class HuaShuList extends Component {
@@ -79,7 +79,7 @@ class HuaShuList extends Component {
       })
       .catch(error => {
         console.log('error', error);
-        Toast.fail(error)
+        // Toast.fail(error)
       })
   };
 
@@ -157,14 +157,15 @@ class HuaShuList extends Component {
                  style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}
                  onClick={() => this.justifyPay(item)}>
               <img
-                src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
+                src={!this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
                 alt={item.name}
                 style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
                 onLoad={() => {
+                  this.setState({[`preloadImg${index}${i}`]: true});
                   window.dispatchEvent(new Event('resize'));
                   // this.setState({ imgHeight: 'auto' });
                 }}
-                onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
+                onError={() => {this.setState({[`preloadImg${index}${i}`]: false})}}
               />
               <WhiteSpace size={'sm'}/>
               <p className={styles.title}>{item.name}</p>
@@ -181,14 +182,14 @@ class HuaShuList extends Component {
     const { list, dataSource, upLoading, pullLoading } = this.state;
     return (
       <div style={{backgroundColor: '#fff'}}>
-        <div className={styles.header}>
-          <Flex justify="start">
-            <div className={styles.goback}>
-              <Icon onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>
-            </div>
-            <span className={styles.headerFont}>搜索{this.props.location.query.filterData}的结果</span>
-          </Flex>
-        </div>
+        {/*<div className={styles.header}>*/}
+          {/*<Flex justify="start">*/}
+            {/*<div className={styles.goback}>*/}
+              {/*<Icon onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>*/}
+            {/*</div>*/}
+            {/*<span className={styles.headerFont}>搜索{this.props.location.query.filterData}的结果</span>*/}
+          {/*</Flex>*/}
+        {/*</div>*/}
 
         {list && list.length ?
           <WingBlank>
