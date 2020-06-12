@@ -17,7 +17,7 @@ class contextInfo extends Component {
   constructor(props) {
     super(props);
     this.state={
-      isPay: true,
+      isPay: false,
       LDFlag: 1,  // 服务端的 flag值， 1 可以免费看一部， 2 需要购买
       list: [],
       dataSource: new ListView.DataSource({
