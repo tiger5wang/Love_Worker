@@ -86,6 +86,20 @@ class SessionCategoryList extends Component {
     this.setask();
   }
 
+
+  // 图片预加载
+  yueJiaZai = ()=>{
+    this.setState({
+      imageStart:'开始'
+    })
+  }
+
+  yuJiazaiError=()=>{
+    this.setState({
+      imageStart:'error'
+    })
+  }
+
   // 随机值
   Randomuuid=()=> {
       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
@@ -97,9 +111,6 @@ class SessionCategoryList extends Component {
       data: [lb1, lb2]
     })
   };
-
-
-
 
   setask = () => {
     const user = window.localStorage.getItem('username');
@@ -131,7 +142,7 @@ class SessionCategoryList extends Component {
     }
   };
 
-  // http://www.verming.com/Api/getindex
+  // 获取列表数据
   getIndex = () => {
     let formdata = new FormData();
     formdata.append('id', this.pathC);
@@ -173,7 +184,8 @@ class SessionCategoryList extends Component {
         Toast.fail('加载数据失败')
       })
   };
-  // 判断支付，跳转详情页
+
+  // 获取详情信息
   justifyPay = (data) => {
     let formdata = new FormData();
     formdata.append('id', this.pathC);
@@ -195,6 +207,7 @@ class SessionCategoryList extends Component {
       })
   };
 
+  // 跳转详情页
   goToDetail = (data) => {
     router.push({
       pathname: '/ContextList/contextInfo',
@@ -204,7 +217,7 @@ class SessionCategoryList extends Component {
     })
   };
 
-
+  // 跳转搜索列表页
   SearchValue = value => {
     router.push({
       pathname: '/home/HuaShuList',
@@ -223,6 +236,7 @@ class SessionCategoryList extends Component {
       this.getIndex();
     }
   }
+
 //下拉刷新
   onRefresh = () => {
     this.setState({ pullLoading: true });
@@ -232,18 +246,6 @@ class SessionCategoryList extends Component {
     //接口请求第一页数据,完成后将pullLoading设为false
   }
 
-  // 图片预加载
-  yueJiaZai = ()=>{
-    this.setState({
-      imageStart:'开始'
-    })
-  }
-
-  yuJiazaiError=()=>{
-    this.setState({
-      imageStart:'error'
-    })
-  }
 //获取item进行展示
   renderRow = (data, i) => {
     // console.log(data, i)
@@ -291,8 +293,7 @@ class SessionCategoryList extends Component {
     return(
       <div className={styles.container}>
 
-          <SearchBar placeholder={searchTitle} onSubmit={value => this.SearchValue(value)}/>
-
+        <SearchBar placeholder={searchTitle} onSubmit={value => this.SearchValue(value)}/>
 
         {/*轮播图*/}
          <WingBlank size="sm">
@@ -325,15 +326,22 @@ class SessionCategoryList extends Component {
         </NoticeBar>
 
         {/*分类部分*/}
-        <Grid itemStyle={{height:88}} renderItem={dataItem => (
-        <div>
-          <img src={dataItem.icon} style={{ width: '50px', height: '50px' }} alt="" />
-          <div style={{ color: '#696969', fontSize: '14px', marginTop: '5px' }}>
-            <span>{dataItem.text}</span>
-          </div>
-        </div>
-      )} columnNum={6} data={data} hasLine={false} onClick={(item) => this.SearchValue(item.text)}/>
-
+        <Grid
+          itemStyle={{height:88}}
+          columnNum={6}
+          data={data}
+          hasLine={false}
+          onClick={(item) => this.SearchValue(item.text)}
+          renderItem={dataItem => (
+            <div>
+              <img src={dataItem.icon} style={{ width: '50px', height: '50px' }} alt="" />
+              <div style={{ color: '#696969', fontSize: '14px', marginTop: '5px' }}>
+                <span>{dataItem.text}</span>
+              </div>
+            </div>
+           )}
+        />
+        <WhiteSpace/>
         <WingBlank>
           {
             list && list.length ?
