@@ -29,7 +29,7 @@ button {
   font-size: 17px;
   margin: 10px auto;
 }
-.contextNmae {
+.contextName {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

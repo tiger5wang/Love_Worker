@@ -364,7 +364,7 @@ class contextInfo extends Component {
                 onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
               />
               <WhiteSpace size={'sm'}/>
-              <p className={styles.contextNmae}>{item.name}</p>
+              <p className={styles.contextName}>{item.name}</p>
               <WhiteSpace size={'sm'}/>
               <p style={{color: 'red'}}>{item.cs}人付款</p>
             </div>
