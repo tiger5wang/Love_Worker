@@ -157,14 +157,15 @@ class HuaShuList extends Component {
                  style={{width: '49%',  marginLeft: index % 2 === 1? '2%': 0, marginTop: 10}}
                  onClick={() => this.justifyPay(item)}>
               <img
-                src={this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
+                src={!this.state[`preloadImg${index}${i}`] ? preloadImg: item.image }
                 alt={item.name}
                 style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
                 onLoad={() => {
+                  this.setState({[`preloadImg${index}${i}`]: true});
                   window.dispatchEvent(new Event('resize'));
                   // this.setState({ imgHeight: 'auto' });
                 }}
-                onError={() => {this.setState({[`preloadImg${index}${i}`]: true})}}
+                onError={() => {this.setState({[`preloadImg${index}${i}`]: false})}}
               />
               <WhiteSpace size={'sm'}/>
               <p className={styles.title}>{item.name}</p>
