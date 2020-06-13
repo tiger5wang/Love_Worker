@@ -38,7 +38,6 @@ import preloadImg from  '../../assets/img/yujiazai.gif'
 
 import { getPageQuery } from '@/utils/utils'
 import proxyRequest from '@/utils/request';
-import { StickyContainer, Sticky } from 'react-sticky';
 
 const listdata = [
   { 'name': '全部', 'imgPath': `${liest1}` },
