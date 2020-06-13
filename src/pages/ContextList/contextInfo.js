@@ -45,15 +45,9 @@ class contextInfo extends Component {
     this.pathC = window.localStorage.getItem('c');
     this.getFlag();
     this.getPayStatus();
-    this.getIndex();
+    // this.getIndex();
   }
 
-  componentWillUnmount() {
-    const flag = window.localStorage.getItem('flag');
-    if(flag != 2) {
-      localStorage.setItem('flag', 2);
-    }
-  }
   // 判断是否支付
   justifyPay = () => {
     const paytype = window.localStorage.getItem('paytype');
@@ -63,13 +57,15 @@ class contextInfo extends Component {
       this.setState({
         isPay: true
       });
-      localStorage.setItem('currentOrder', '');
+      // localStorage.setItem('currentOrder', '');
     }
     if(paytype == 2) {  // 包天
       if(moment(paydate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')) {
         this.setState({
           isPay: true
         })
+      } else {
+        alert('原支付已到期，请重新支付观看')
       }
     }
     if(paytype == 3) {  // 包月
@@ -77,6 +73,8 @@ class contextInfo extends Component {
         this.setState({
           isPay: true
         })
+      } else {
+        alert('原支付已到期，请重新支付观看')
       }
     }
   }
@@ -91,6 +89,7 @@ class contextInfo extends Component {
 
       proxyRequest.post('/Api/get_os', formdata)
         .then(result => {
+          console.log('getPayStatus', result)
           const {code, msg} = result;
           // Toast.info(code)
           if(code == 0) {
@@ -180,7 +179,6 @@ class contextInfo extends Component {
     }
 
     window.location.href = request_url;
-
   }
 
 
@@ -188,6 +186,8 @@ class contextInfo extends Component {
     // alert('render')
     const { list, dataSource, upLoading, pullLoading, data } = this.state;
     const flag = window.localStorage.getItem('flag');
+    const paytype = window.localStorage.getItem('paytype');
+
     // console.log('------------------', flag)
     const videoJsOptions = {
       autoplay: true,  //自动播放
@@ -230,14 +230,16 @@ class contextInfo extends Component {
           :
           <div>
             <VideoPlayer isreload={false} data={videoJsOptions} callback={() => {
-              const flag = window.localStorage.getItem('flag');
               if(flag != 2) {
                 localStorage.setItem('flag', 2);
+              }
+              if (paytype == 1) {
+                localStorage.setItem('currentOrder', '');
               }
             }} />
             <WingBlank>
               {
-                list && list.length &&
+                list && list.length > 0 &&
                   <ListView
                     dataSource={dataSource.cloneWithRows(list)}
                     renderRow={(rowData, id1, i) => this.renderRow(rowData, i)}

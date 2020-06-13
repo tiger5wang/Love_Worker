@@ -38,6 +38,7 @@ import preloadImg from  '../../assets/img/yujiazai.gif'
 
 import { getPageQuery } from '@/utils/utils'
 import proxyRequest from '@/utils/request';
+import { StickyContainer, Sticky } from 'react-sticky';
 
 const listdata = [
   { 'name': '全部', 'imgPath': `${liest1}` },
@@ -68,6 +69,7 @@ class SessionCategoryList extends Component {
       upLoading : false,
       pullLoading : false,
       loadEnd: false,
+      isLoaded: false
     };
     this.data = [];
     this.page = 0;
@@ -82,7 +84,7 @@ class SessionCategoryList extends Component {
       localStorage.setItem('flag', 1);
     }
     this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
-    console.log(JSON.stringify(this.pathC))
+    // console.log(JSON.stringify(this.pathC))
     this.setask();
   }
 
@@ -147,11 +149,12 @@ class SessionCategoryList extends Component {
     let formdata = new FormData();
     formdata.append('id', this.pathC);
     formdata.append('page', this.page);
-
+    Toast.loading('加载中...', 0);
     proxyRequest.post('/Api/getindex', formdata)
       .then(result => {
         console.log('/Api/getindex', result)
         const {code, data, msg} = result;
+        Toast.hide();
         if(code === 0) {
           if(!data || data.length <= 0) {
             this.setState({
@@ -169,17 +172,25 @@ class SessionCategoryList extends Component {
           this.setState({
             list: this.data,
             upLoading : false,
-            pullLoading : false
+            pullLoading : false,
+            isLoaded: true
           })
         } else {
           Toast.info(msg);
           this.setState({
             upLoading : false,
-            pullLoading : false
+            pullLoading : false,
+            isLoaded: true
           })
         }
       })
       .catch(error => {
+        Toast.hide();
+        this.setState({
+          upLoading : false,
+          pullLoading : false,
+          isLoaded: true
+        })
         console.log('error', error);
         Toast.fail('加载数据失败')
       })
@@ -250,6 +261,7 @@ class SessionCategoryList extends Component {
   renderRow = (data, i) => {
     // console.log(data, i)
     return (
+      <WingBlank>
         <Flex wrap={'wrap'} style={{width: window.innerWidth - 30}}>
           {data.length > 0 && data.map((item, index) => {
             return (
@@ -275,6 +287,8 @@ class SessionCategoryList extends Component {
             )
           })}
         </Flex>
+      </WingBlank>
+
     )
   }
 
@@ -286,90 +300,94 @@ class SessionCategoryList extends Component {
       text: `${i.name}`,
     }));
 
-    const { list, dataSource, upLoading, pullLoading } = this.state;
+    const { list, dataSource, upLoading, pullLoading, loadEnd, isLoaded } = this.state;
 
     const searchTitle = (
       <span style={{ color: '#696969'}}>搜索关键字例如:人兽、强奸...</span>
     )
     return(
       <div className={styles.container}>
-
-        <SearchBar placeholder={searchTitle} onSubmit={value => this.SearchValue(value)}/>
-
-        {/*轮播图*/}
-         <WingBlank size="sm">
-            <Carousel
-            autoplay={true}
-            infinite={true}
-            autoplayInterval={3000}
-            // beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
-            // afterChange={index => console.log('slide to', index)}
-          >
-            {this.state.data.map(val => (
-              <a key={val}
-                style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
-              >
-                <img
-                  src={`${val}`}
-                  alt=""
-                  style={{ width: '100%', verticalAlign: 'top', borderRadius: 11, marginTop:4 }}
-                  onLoad={() => {
-                    window.dispatchEvent(new Event('resize'));
-                    this.setState({ imgHeight: 'auto' });
-                  }}
-                />
-              </a>
-            ))}
-            </Carousel>
-         </WingBlank>
-        <NoticeBar marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}>
-          如 果 付 款 后 没 有 跳 转 播 放 页 面 请 联 系 客 服.855779585955
-        </NoticeBar>
-
-        {/*分类部分*/}
-        <Grid
-          itemStyle={{height:88}}
-          columnNum={6}
-          data={data}
-          hasLine={false}
-          onClick={(item) => this.SearchValue(item.text)}
-          renderItem={dataItem => (
-            <div>
-              <img src={dataItem.icon} style={{ width: '50px', height: '50px' }} alt="" />
-              <div style={{ color: '#696969', fontSize: '14px', marginTop: '5px' }}>
-                <span>{dataItem.text}</span>
-              </div>
-            </div>
-           )}
-        />
-        <WhiteSpace/>
-        <WingBlank>
           {
             list && list.length ?
               <ListView
+                style={{ width: '100%', height: window.innerHeight, padding: 0}}
                 dataSource={dataSource.cloneWithRows(list)}
                 renderRow={(rowData, id1, i) => this.renderRow(rowData, i)}
                 initialListSize={5}
                 pageSize={5}
                 renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
-                  {upLoading ? <Icon type="loading" />: null}
+                  {upLoading ? <Icon type="loading" />: loadEnd ? <span>没有更多了</span>: null}
                 </div>)}
                 onEndReached={() => this.onEndReached()}
                 onEndReachedThreshold={50}
                 // useBodyScroll={true}
-                style={{ width: window.innerWidth, height: window.innerHeight}}
+
                 pullToRefresh={<PullToRefresh // import { PullToRefresh } from 'antd-mobile'
                   refreshing={pullLoading}
                   onRefresh={this.onRefresh}
                 />}
+
+                renderHeader={() => (<div style={{width: window.innerWidth - 15, marginLeft: -15}}>
+                  <SearchBar placeholder={searchTitle} onSubmit={value => this.SearchValue(value)}/>
+
+                  {/*轮播图*/}
+                  <WingBlank size="sm">
+                    <Carousel
+                      autoplay={true}
+                      infinite={true}
+                      autoplayInterval={3000}
+                      // beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
+                      // afterChange={index => console.log('slide to', index)}
+                    >
+                      {this.state.data.map(val => (
+                        <a key={val}
+                           style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
+                        >
+                          <img
+                            src={`${val}`}
+                            alt=""
+                            style={{ width: '100%', verticalAlign: 'top', borderRadius: 11, marginTop:4 }}
+                            onLoad={() => {
+                              window.dispatchEvent(new Event('resize'));
+                              this.setState({ imgHeight: 'auto' });
+                            }}
+                          />
+                        </a>
+                      ))}
+                    </Carousel>
+                  </WingBlank>
+                  <NoticeBar marqueeProps={{ loop: true, style: { padding: '0 7.5px' } }}>
+                    如 果 付 款 后 没 有 跳 转 播 放 页 面 请 联 系 客 服.855779585955
+                  </NoticeBar>
+
+                  {/*分类部分*/}
+                  <Grid
+                    itemStyle={{height:88}}
+                    columnNum={6}
+                    data={data}
+                    hasLine={false}
+                    onClick={(item) => this.SearchValue(item.text)}
+                    renderItem={dataItem => (
+                      <div>
+                        <img src={dataItem.icon} style={{ width: '50px', height: '50px' }} alt="" />
+                        <div style={{ color: '#696969', fontSize: '14px', marginTop: '5px' }}>
+                          <span>{dataItem.text}</span>
+                        </div>
+                      </div>
+                    )}
+                  />
+                  <WhiteSpace/>
+
+                </div>)}
+
               />
               :
-              list && !list.length ?
-                <div >
+              isLoaded ?
+                <div>
                   <p>暂无数据</p>
                 </div> : null
           }
-        </WingBlank>
+        {/*</WingBlank>*/}
       </div>
     )
   }

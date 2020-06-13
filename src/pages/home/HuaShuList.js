@@ -25,6 +25,7 @@ class HuaShuList extends Component {
       upLoading : false,
       pullLoading : false,
       loadEnd: false,
+      isLoaded: false
     };
     this.data = [];
     this.page = 0;
@@ -67,17 +68,24 @@ class HuaShuList extends Component {
           this.setState({
             list: this.data,
             upLoading : false,
-            pullLoading : false
+            pullLoading : false,
+            isLoaded: true
           })
         } else {
           Toast.info(msg);
           this.setState({
             upLoading : false,
-            pullLoading : false
+            pullLoading : false,
+            isLoaded: true
           })
         }
       })
       .catch(error => {
+        this.setState({
+          upLoading : false,
+          pullLoading : false,
+          isLoaded: true
+        })
         console.log('error', error);
         // Toast.fail(error)
       })
@@ -179,17 +187,17 @@ class HuaShuList extends Component {
   };
 
   render() {
-    const { list, dataSource, upLoading, pullLoading } = this.state;
+    const { list, dataSource, upLoading, pullLoading, isLoaded, loadEnd } = this.state;
     return (
       <div style={{backgroundColor: '#fff'}}>
-        {/*<div className={styles.header}>*/}
-          {/*<Flex justify="start">*/}
-            {/*<div className={styles.goback}>*/}
-              {/*<Icon onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>*/}
-            {/*</div>*/}
-            {/*<span className={styles.headerFont}>搜索{this.props.location.query.filterData}的结果</span>*/}
-          {/*</Flex>*/}
-        {/*</div>*/}
+        <div className={styles.header}>
+          <Flex justify="start">
+            <div className={styles.goback}>
+              <Icon  onClick={() => this.returnPage()} color='#fff' type="left" size='lg' style={{width: 30, height: 20}}/>
+            </div>
+            <span  onClick={() => this.returnPage()} className={styles.headerFont}>{this.props.location.query.filterData}</span>
+          </Flex>
+        </div>
 
         {list && list.length ?
           <WingBlank>
@@ -199,7 +207,7 @@ class HuaShuList extends Component {
               initialListSize={5}
               pageSize={5}
               renderFooter={() => (<div style={{ padding: 30, textAlign: 'center' }}>
-                {upLoading ? <Icon type="loading" />: null}
+                {upLoading ? <Icon type="loading" />: loadEnd ? <span>没有更多了</span> : null}
               </div>)}
               onEndReached={() => this.onEndReached()}
               onEndReachedThreshold={50}
@@ -212,9 +220,11 @@ class HuaShuList extends Component {
             />
           </WingBlank>
           :
+          isLoaded ?
           <div className={styles.container}>
             <p className={styles.noData}>暂无数据</p>
           </div>
+            : null
         }
 
       </div>

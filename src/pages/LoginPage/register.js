@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import { Flex, WingBlank, List} from 'antd-mobile';
+import { Flex, Icon, WingBlank, List} from 'antd-mobile';
 import { createForm } from 'rc-form';
 import {connect} from 'dva'
 import Styles from './register.css'
 import ModifyImg from  '../../assets/img/emptyCart.jpg'
 import proxyRequest from '@/utils/request';
+import styles from '@/pages/ContextList/contextInfo.css';
 const Item = List.Item;
 
 
@@ -59,6 +60,10 @@ class register extends Component {
 
     return (
       <div className={Styles.box}>
+        <Flex justify="start" style={{backgroundColor: 'red', padding: '8px 15px'}}>
+          {/*<Icon style={{width: 30, height: 20}} onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>*/}
+          <p style={{fontSize: 16, color: '#fff'}}>已购</p>
+        </Flex>
         {list.length > 0 ? list.map(item => <Item extra={item}>订单号</Item>) :
           <WingBlank size="sm">
             <Flex justify='center' style={{marginTop:'50%'}}>
