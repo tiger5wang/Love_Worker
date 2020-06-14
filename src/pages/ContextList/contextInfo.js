@@ -34,6 +34,8 @@ class contextInfo extends Component {
   }
 
   componentDidMount(){
+    // const{data} = this.state;
+
     let _this = this;
     window.addEventListener("orientationchange", function() {
       // alert(window.orientation);
@@ -57,12 +59,11 @@ class contextInfo extends Component {
   justifyPay = () => {
     const paytype = window.localStorage.getItem('paytype');
     const paydate = window.localStorage.getItem('paydate');
-
-    if(paytype == 1) {  // 单片
+    if(paytype === 1) {  // 单片
       this.getPayStatus();
       // localStorage.setItem('currentOrder', '');
     }
-    if(paytype == 2) {  // 包天
+    if(paytype === 2) {  // 包天
       if(moment(paydate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')) {
         this.setState({
           isPay: true
@@ -71,7 +72,7 @@ class contextInfo extends Component {
         alert('原支付已到期，请重新支付观看')
       }
     }
-    if(paytype == 3) {  // 包月
+    if(paytype === 3) {  // 包月
       if(moment(paydate).add(1, 'months') >= moment()) {
         this.setState({
           isPay: true
@@ -94,7 +95,6 @@ class contextInfo extends Component {
         .then(result => {
           console.log('getPayStatus', result)
           const {code, msg} = result;
-          // Toast.info(code)
           if(code == 0) {
             this.setState({
               isPay: true
@@ -173,12 +173,14 @@ class contextInfo extends Component {
     let pars = `id=${this.pathC}&orderid=${datetime}&money=${money}&zname=${data.id}&paytype=${paytype}`
 
     let request_url = UrlConfig.base_url + '/Pay/startpay?' + pars;
-    localStorage.setItem('currentOrder', datetime)
-    localStorage.setItem('paytype', type);
-    localStorage.setItem('paydate', new Date());
+    console.log(this.orders)
     if(!this.orders) {
       localStorage.setItem('orders', datetime);
     } else {
+      localStorage.setItem('currentOrder', datetime);
+      localStorage.setItem('paytype', type);
+      localStorage.setItem('paydate', new Date());
+      this.getPayStatus()
       localStorage.setItem('orders', `${this.orders},${datetime}`);
     }
 

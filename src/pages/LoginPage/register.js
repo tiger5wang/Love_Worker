@@ -78,6 +78,7 @@ class register extends Component {
       pathname: '/ContextList/contextInfo',
       query: {
         data,
+        sid:data.id,
         isWatched: true
       },
     })

@@ -78,13 +78,18 @@ class SessionCategoryList extends Component {
   componentDidMount() {
     const url_c = window.localStorage.getItem('c');
     this.flag = window.localStorage.getItem('flag');
-
-    if(!this.flag) {
-      localStorage.setItem('flag', 1);
+    if (/Android|iPhone|iPod/i.test(navigator.userAgent)) {
+      if (!this.flag) {
+        localStorage.setItem('flag', 1);
+      }
+      this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
+      // console.log(JSON.stringify(this.pathC))
+      this.setask();
+    } else {
+      window.location.href = 'http://news.baidu.com/';
     }
-    this.pathC = getPageQuery().c ? getPageQuery().c : url_c;
-    // console.log(JSON.stringify(this.pathC))
-    this.setask();
+
+
   }
 
 
@@ -222,7 +227,10 @@ class SessionCategoryList extends Component {
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {
-        data
+        data,
+        // sid: data.id,
+        // name: data.name,
+        // url: data.url,
       },
     })
   };
@@ -401,3 +409,6 @@ export default connect(({home, header})=>{
     header
   };
 })(SessionCategory)
+
+
+
