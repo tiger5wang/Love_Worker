@@ -127,21 +127,22 @@ class register extends Component {
           <p style={{fontSize: 16, color: '#fff'}}>已购</p>
         </Flex>
         <WingBlank>
-          <Flex wrap={'wrap'} style={{width: window.innerWidth - 30}}>
-            {watchedData.length > 0 && watchedData.map((item, index) => this.rendItem(item,  index))}
-          </Flex>
+          {watchedData.length > 0 ?
+            <Flex wrap={'wrap'} style={{width: window.innerWidth - 30}}>
+              {watchedData.map((item, index) => this.rendItem(item,  index))}
+            </Flex>
+            :
+            <div>
+              <Flex justify='center' style={{marginTop:'50%'}}>
+                <img alt=" " src={ModifyImg}/>
+              </Flex>
+              <Flex justify='center'>
+                <span>空空如也  <a href='#' style={{ color: 'red' }}>随便逛逛</a></span>
+              </Flex>
+            </div>
+          }
         </WingBlank>
 
-        {list.length > 0 ? list.map(item => <Item extra={item}>订单号</Item>) :
-          <WingBlank size="sm">
-            <Flex justify='center' style={{marginTop:'50%'}}>
-              <img alt=" " src={ModifyImg}/>
-            </Flex>
-            <Flex justify='center'>
-              <span>空空如也  <a href='#' style={{ color: 'red' }}>随便逛逛</a></span>
-            </Flex>
-          </WingBlank>
-        }
       </div>
 
     );

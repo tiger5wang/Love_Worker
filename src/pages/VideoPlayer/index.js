@@ -10,7 +10,9 @@ export default class VideoPlayer extends React.Component {
     //这里的this.props是上级传进来的video的options
     this.player = videojs(this.videoNode, this.props.data, () => {
       // console.log('onPlayerReady', this)
-      this.props.callback()
+      this.player.on('play', () => {
+        this.props.callback()
+      });
     });
     videojs.addLanguage('zh-CN', videozhCN);
 
@@ -26,7 +28,6 @@ export default class VideoPlayer extends React.Component {
       this.player.dispose()
     }
   }
-
   // wrap the player in a div with a `data-vjs-player` attribute
   // so videojs won't create additional wrapper in the DOM
   // see https://github.com/videojs/video.js/pull/3856

@@ -44,8 +44,8 @@ class contextInfo extends Component {
     this.orders = window.localStorage.getItem('orders');
     this.pathC = window.localStorage.getItem('c');
     this.getFlag();
-    this.getPayStatus();
-    // this.getIndex();
+    this.justifyPay();
+    this.getIndex();
     if (this.props.location.query.isWatched) {
       this.setState({
         isPay: true
@@ -59,9 +59,7 @@ class contextInfo extends Component {
     const paydate = window.localStorage.getItem('paydate');
 
     if(paytype == 1) {  // 单片
-      this.setState({
-        isPay: true
-      });
+      this.getPayStatus();
       // localStorage.setItem('currentOrder', '');
     }
     if(paytype == 2) {  // 包天
@@ -98,8 +96,9 @@ class contextInfo extends Component {
           const {code, msg} = result;
           // Toast.info(code)
           if(code == 0) {
-            this.justifyPay();
-            this.getIndex();
+            this.setState({
+              isPay: true
+            });
           }
         })
         .catch(err => console.log('error', err))
@@ -195,9 +194,9 @@ class contextInfo extends Component {
     let watchedString = window.localStorage.getItem('watchedData');
     const watchedData =  JSON.parse(watchedString) || [] ;
 
-    // console.log('------------------', flag)
+    console.log('------------------', flag)
     const videoJsOptions = {
-      autoplay: true,  //自动播放
+      autoplay: false,  //自动播放
       language: 'zh-CN',
       controls: true,  //控制条
       preload: 'auto',  //自动加载
@@ -216,7 +215,10 @@ class contextInfo extends Component {
           // type: "video/m3u8",  //类型可加可不加，目前未看到影响
           // type: 'video/mp4',
         }
-      ]
+      ],
+      // plugins: {
+      //   onPlayPlugin: true
+      // }
     };
 
     return (
@@ -238,6 +240,7 @@ class contextInfo extends Component {
           <div>
             <VideoPlayer isreload={false} data={videoJsOptions} callback={() => {
               if(flag != 2) {
+                // console.log('2222222222222222222222222')
                 localStorage.setItem('flag', 2);
               }
               if (paytype == 1) {
