@@ -46,6 +46,11 @@ class contextInfo extends Component {
     this.getFlag();
     this.getPayStatus();
     // this.getIndex();
+    if (this.props.location.query.isWatched) {
+      this.setState({
+        isPay: true
+      })
+    }
   }
 
   // 判断是否支付
@@ -187,6 +192,8 @@ class contextInfo extends Component {
     const { list, dataSource, upLoading, pullLoading, data } = this.state;
     const flag = window.localStorage.getItem('flag');
     const paytype = window.localStorage.getItem('paytype');
+    let watchedString = window.localStorage.getItem('watchedData');
+    const watchedData =  JSON.parse(watchedString) || [] ;
 
     // console.log('------------------', flag)
     const videoJsOptions = {
@@ -235,6 +242,17 @@ class contextInfo extends Component {
               }
               if (paytype == 1) {
                 localStorage.setItem('currentOrder', '');
+              }
+              let len = watchedData.length > 20 ? 20: watchedData.length;
+              let repet = false;
+              for (let i=0;i<len; i++) {
+                if (watchedData[i].id == data.id){
+                  repet = true;
+                  break;
+                }
+              }
+              if (!repet) {
+                localStorage.setItem('watchedData', JSON.stringify(watchedData.concat(data)))
               }
             }} />
             <WingBlank>
