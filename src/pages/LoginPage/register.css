@@ -30,3 +30,7 @@
   text-overflow: ellipsis;
   width: 100%;
 }
+.expireTime {
+  text-align: left;
+  padding: 5px 0;
+}

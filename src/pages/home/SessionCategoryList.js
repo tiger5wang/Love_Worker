@@ -208,7 +208,7 @@ class SessionCategoryList extends Component {
 
     proxyRequest.post('/Api/getdetails', formdata)
       .then(result => {
-        console.log('000000000000', result)
+        console.log('Api/getdetails', result)
         const {code, data, msg} = result;
         if(code === 0) {
           this.goToDetail(data)
@@ -227,10 +227,7 @@ class SessionCategoryList extends Component {
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {
-        data,
-        // sid: data.id,
-        // name: data.name,
-        // url: data.url,
+        data: JSON.stringify(data),
       },
     })
   };

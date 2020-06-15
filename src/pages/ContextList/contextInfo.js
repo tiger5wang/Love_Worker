@@ -27,23 +27,13 @@ class contextInfo extends Component {
       pullLoading : false,
       loadEnd: false,
       orientation: 0,
-      data: this.props.location.query.data
+      data: JSON.parse(this.props.location.query.data)
     };
     this.page = 0;
     this.data = []
   }
 
   componentDidMount(){
-    // const{data} = this.state;
-
-    let _this = this;
-    window.addEventListener("orientationchange", function() {
-      // alert(window.orientation);
-      _this.forceUpdate();
-      _this.setState({orientation: window.orientation})
-    }, false);
-
-    this.orders = window.localStorage.getItem('orders');
     this.pathC = window.localStorage.getItem('c');
     this.getFlag();
     this.justifyPay();
@@ -64,7 +54,7 @@ class contextInfo extends Component {
       // localStorage.setItem('currentOrder', '');
     }
     if(paytype === 2) {  // 包天
-      if(moment(paydate).format('YYYY-MM-DD') == moment().format('YYYY-MM-DD')) {
+      if(moment(paydate).add(1, 'days') >= moment()) {
         this.setState({
           isPay: true
         })
@@ -173,19 +163,13 @@ class contextInfo extends Component {
     let pars = `id=${this.pathC}&orderid=${datetime}&money=${money}&zname=${data.id}&paytype=${paytype}`
 
     let request_url = UrlConfig.base_url + '/Pay/startpay?' + pars;
-    console.log(this.orders)
-    if(!this.orders) {
-      localStorage.setItem('orders', datetime);
-    } else {
-      localStorage.setItem('currentOrder', datetime);
-      localStorage.setItem('paytype', type);
-      localStorage.setItem('paydate', new Date());
-      this.getPayStatus()
-      localStorage.setItem('orders', `${this.orders},${datetime}`);
-    }
+
+    localStorage.setItem('currentOrder', datetime);
+    localStorage.setItem('paytype', type);
+    localStorage.setItem('paydate', new Date());
 
     window.location.href = request_url;
-  }
+  };
 
 
   render() {
@@ -242,7 +226,6 @@ class contextInfo extends Component {
           <div>
             <VideoPlayer isreload={false} data={videoJsOptions} callback={() => {
               if(flag != 2) {
-                // console.log('2222222222222222222222222')
                 localStorage.setItem('flag', 2);
               }
               if (paytype == 1) {

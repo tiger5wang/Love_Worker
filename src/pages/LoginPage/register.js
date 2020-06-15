@@ -7,7 +7,8 @@ import Styles from './register.css'
 import ModifyImg from  '../../assets/img/emptyCart.jpg'
 import proxyRequest from '@/utils/request';
 import preloadImg from '@/assets/img/yujiazai.gif';
-const Item = List.Item;
+import moment from 'moment/moment';
+
 
 
 class register extends Component {
@@ -46,8 +47,6 @@ class register extends Component {
   componentDidMount(){
     this.orders = window.localStorage.getItem('orders');
     this.pathC = window.localStorage.getItem('c');
-    // alert(this.orders)
-    // this.getOrders()
   }
 
   // 获取详情信息
@@ -94,9 +93,8 @@ class register extends Component {
           alt={item.name}
           style={{ width: '100%', height: window.innerWidth / 3 - 10, verticalAlign: 'top', borderRadius: 4}}
           onLoad={() => {
-            this.setState({[`preloadImg${index}`]: true})
+            this.setState({[`preloadImg${index}`]: true});
             window.dispatchEvent(new Event('resize'));
-            // this.setState({ imgHeight: 'auto' });
           }}
           onError={() => {this.setState({[`preloadImg${index}`]: false})}}
         />
@@ -111,15 +109,20 @@ class register extends Component {
   render() {
     let watchedString = window.localStorage.getItem('watchedData');
     const watchedData =  JSON.parse(watchedString) || [] ;
-    console.log('--------------', watchedData)
+    const paytype = window.localStorage.getItem('paytype');
+    const paydate = window.localStorage.getItem('paydate');
 
-    let orders = window.localStorage.getItem('orders')
-    var list = []
-    if(orders) {
-       list = orders.split(',');
-    }else {
-      list = []
+    let rentType = '';
+    let rentTime = '';
+    if(paytype == '2') {  // 包天
+      rentType = '包天';
+      rentTime = moment(paydate).add(1, 'days');
     }
+    if(paytype == '3') {  // 包月
+      rentType = '包月';
+      rentTime = moment(paydate).add(1, 'months');
+    }
+
 
     return (
       <div className={Styles.box}>
@@ -128,6 +131,7 @@ class register extends Component {
           <p style={{fontSize: 16, color: '#fff'}}>已购</p>
         </Flex>
         <WingBlank>
+          {rentType && rentTime && <p className={Styles.expireTime}>{rentType}到期时间：{moment(rentTime).format('YYYY-MM-DD HH:mm:ss')}</p>}
           {watchedData.length > 0 ?
             <Flex wrap={'wrap'} style={{width: window.innerWidth - 30}}>
               {watchedData.map((item, index) => this.rendItem(item,  index))}
@@ -143,7 +147,6 @@ class register extends Component {
             </div>
           }
         </WingBlank>
-
       </div>
 
     );
