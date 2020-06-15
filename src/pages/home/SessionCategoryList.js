@@ -19,7 +19,7 @@ import router from 'umi/router';
 import LazyLoad from 'react-lazyload'
 // 等会要放开
 import lb1 from '../../assets/img/lb1.jpg';
-import lb2 from '../../assets/img/lb2.jpg';
+import lb2 from '../../assets/img/lb12.jpg';
 import liest1 from  '../../assets/img/1577453883_2111036308.png'
 import liest2 from  '../../assets/img/1577453832_742047754.png'
 import liest3 from  '../../assets/img/1577453733_1352348737.png'
