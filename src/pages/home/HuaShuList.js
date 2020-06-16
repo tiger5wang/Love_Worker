@@ -195,6 +195,7 @@ class HuaShuList extends Component {
             <div className={styles.goback}>
               <Icon  onClick={() => this.returnPage()} color='#fff' type="left" size='lg' style={{width: 30, height: 20}}/>
             </div>
+             <p style={{color: '#ffffff',   marginTop: 0, width:50}}>返回</p>
             <span  onClick={() => this.returnPage()} className={styles.headerFont}>{this.props.location.query.filterData}</span>
           </Flex>
         </div>

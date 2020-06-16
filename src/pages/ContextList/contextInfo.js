@@ -212,6 +212,7 @@ class contextInfo extends Component {
         <div className={styles.header}>
           <Flex justify="start">
             <Icon style={{width: 30, height: 20}} onClick={() => this.returnPage()} color='#fff' type="left" size='lg'/>
+            <p style={{color: 'red', width:50}}>返回</p>
             <p className={styles.title}>{data.name}</p>
           </Flex>
         </div>
