@@ -53,7 +53,7 @@ class contextInfo extends Component {
       this.getPayStatus();
       // localStorage.setItem('currentOrder', '');
     }
-    if(paytype === 2) {  // 包天
+    if(paytype == '2') {  // 包天
       if(moment(paydate).add(1, 'days') >= moment()) {
         this.setState({
           isPay: true
@@ -62,7 +62,7 @@ class contextInfo extends Component {
         alert('原支付已到期，请重新支付观看')
       }
     }
-    if(paytype === 3) {  // 包月
+    if(paytype == '3') {  // 包月
       if(moment(paydate).add(1, 'months') >= moment()) {
         this.setState({
           isPay: true
