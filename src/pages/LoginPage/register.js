@@ -76,7 +76,7 @@ class register extends Component {
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {
-        data,
+        data:JSON.stringify(data),
         sid:data.id,
         isWatched: true
       },
