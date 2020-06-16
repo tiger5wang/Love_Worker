@@ -132,7 +132,7 @@ class HuaShuList extends Component {
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {
-        data
+        data: JSON.stringify(data)
       },
     })
   };
