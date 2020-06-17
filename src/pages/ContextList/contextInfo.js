@@ -55,18 +55,20 @@ class contextInfo extends Component {
     }
     if(paytype == '2') {  // 包天
       if(moment(paydate).add(1, 'days') >= moment()) {
-        this.setState({
-          isPay: true
-        })
+        this.getPayStatus();
+        // this.setState({
+        //   isPay: true
+        // })
       } else {
         alert('原支付已到期，请重新支付观看')
       }
     }
     if(paytype == '3') {  // 包月
       if(moment(paydate).add(1, 'months') >= moment()) {
-        this.setState({
-          isPay: true
-        })
+        this.getPayStatus();
+        // this.setState({
+        //   isPay: true
+        // })
       } else {
         alert('原支付已到期，请重新支付观看')
       }
