@@ -91,6 +91,8 @@ class contextInfo extends Component {
             this.setState({
               isPay: true
             });
+          } else {
+            alert(msg)
           }
         })
         .catch(err => console.log('error', err))
