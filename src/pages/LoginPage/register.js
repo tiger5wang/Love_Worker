@@ -76,7 +76,7 @@ class register extends Component {
     router.push({
       pathname: '/ContextList/contextInfo',
       query: {
-        data,
+        data:JSON.stringify(data),
         sid:data.id,
         isWatched: true
       },
@@ -105,6 +105,13 @@ class register extends Component {
       </div>
     )
   }
+
+
+   gotoHome = () => {
+    router.push({
+      pathname: '/',
+    })
+  };
 
   render() {
     let watchedString = window.localStorage.getItem('watchedData');
@@ -142,7 +149,7 @@ class register extends Component {
                 <img alt=" " src={ModifyImg}/>
               </Flex>
               <Flex justify='center'>
-                <span>空空如也  <a href='#' style={{ color: 'red' }}>随便逛逛</a></span>
+                <span>空空如也  <a href={'/'} style={{ color: 'red' }}>随便逛逛</a></span>
               </Flex>
             </div>
           }
