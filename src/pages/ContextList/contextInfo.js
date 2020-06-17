@@ -47,15 +47,16 @@ class contextInfo extends Component {
 
   // 判断是否支付
   justifyPay = () => {
+    const {isWatched} = this.props.location.query
     const paytype = window.localStorage.getItem('paytype');
     const paydate = window.localStorage.getItem('paydate');
     if(paytype === 1) {  // 单片
-      this.getPayStatus();
+      !isWatched && this.getPayStatus();
       // localStorage.setItem('currentOrder', '');
     }
     if(paytype == '2') {  // 包天
       if(moment(paydate).add(1, 'days') >= moment()) {
-        this.getPayStatus();
+        !isWatched && this.getPayStatus();
         // this.setState({
         //   isPay: true
         // })
@@ -65,7 +66,7 @@ class contextInfo extends Component {
     }
     if(paytype == '3') {  // 包月
       if(moment(paydate).add(1, 'months') >= moment()) {
-        this.getPayStatus();
+        !isWatched && this.getPayStatus();
         // this.setState({
         //   isPay: true
         // })
